@@ -51,6 +51,17 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
   Sem eles, `OperatingSystem` falha ao iniciar.
 - `tools/OperatingSystem.java` importa `com.apple.eio`; ele é compilado com
   `vendor/sh3d/lib-compile/AppleJavaExtensions.jar` como `compileOnly`.
+- **GPU/OpenGL (Fedora do Leonardo):** Intel Iris Xe (Raptor Lake-P), Mesa 26.2,
+  OpenGL 4.6 core com aceleração; sessão Wayland (AWT roda via XWayland).
+  Testes com jME usam o contexto offscreen do LWJGL3 direto na GPU; não é
+  preciso `LIBGL_ALWAYS_SOFTWARE`. Se uma máquina sem GPU rodar os testes,
+  use Mesa llvmpipe (`LIBGL_ALWAYS_SOFTWARE=1`). `glxinfo` vem de `glx-utils`.
+- **jME e Compose convivem** no mesmo processo (testado em `JmeSmokeTest`:
+  janela Compose aberta + jME offscreen + jME em janela). Em testes, use
+  `application(exitProcessOnExit = false)`, senão o Compose encerra a JVM do teste.
+- Para render offscreen do jME: `FrameBuffer` próprio como saída da `ViewPort` +
+  `SceneProcessor.postFrame` lendo com `renderer.readFrameBuffer` (veja
+  `app/src/test/.../JmeSmokeTest.kt`); a leitura vem de baixo para cima.
 
 ## Documentos vivos (mantenha atualizados)
 

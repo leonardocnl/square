@@ -44,4 +44,7 @@
 
 ## Problemas conhecidos
 
-- Nenhum ainda.
+- Móveis dentro de grupos (`HomeFurnitureGroup`) não são observados pelo `HomeChangeWatcher`.
+- Os listeners que o `PlanController` original registra no `Home` não têm remoção
+  (a API dele não oferece); só vazam se o Home sobreviver ao controller.
+- LWJGL avisa sobre `sun.misc.Unsafe` no JDK 25 (inofensivo por ora).

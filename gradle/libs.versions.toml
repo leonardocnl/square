@@ -1,10 +1,8 @@
-# Versões NÃO verificadas no ambiente onde este arquivo foi criado (sem acesso
-# ao Maven Central). Antes do primeiro build, confira as versões estáveis mais
-# recentes e atualize aqui.
+# Versões estáveis conferidas no Maven Central em 2026-10-24.
 [versions]
-kotlin = "2.2.20"
-compose = "1.9.0"
-jme = "3.8.1-stable"
+kotlin = "2.4.21"
+compose = "1.12.2"
+jme = "3.9.0-stable"
 
 [libraries]
 jme-core = { module = "org.jmonkeyengine:jme3-core", version.ref = "jme" }

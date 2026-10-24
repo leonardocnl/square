@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +38,11 @@ fun main(args: Array<String>) = application {
             ) {
                 BasicText("Abrir .sh3d", style = TextStyle(color = background))
             }
-            home?.let { PlanCanvas(it, remember(it) { planViewOf(it) }) }
+            home?.let {
+                val view = remember(it) { planViewOf(it) }
+                DisposableEffect(view) { onDispose { view.dispose() } }
+                PlanCanvas(it, view)
+            }
         }
     }
 }

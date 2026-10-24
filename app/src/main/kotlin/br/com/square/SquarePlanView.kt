@@ -2,6 +2,7 @@ package br.com.square
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
@@ -48,6 +49,21 @@ class SquarePlanView(private val home: Home, private val controller: PlanControl
     var offset by mutableStateOf(Offset.Zero)
     var viewSize by mutableStateOf(Size.Zero)
         private set
+
+    /**
+     * Sobe a cada mudança do modelo; o canvas lê no desenho, então o Compose
+     * junta várias mudanças seguidas num único redesenho por frame.
+     */
+    var version by mutableIntStateOf(0)
+        private set
+    /** Quantas vezes o canvas desenhou (usado pelos testes). */
+    var drawCount = 0
+        internal set
+
+    private val watcher = HomeChangeWatcher(home) { version++ }
+
+    /** Remove os listeners do Home; chame ao descartar a view. */
+    fun dispose() = watcher.close()
 
     private var zoomAnchor: Offset? = null
     private var fitted = false

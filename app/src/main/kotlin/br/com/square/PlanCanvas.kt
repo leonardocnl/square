@@ -81,6 +81,9 @@ internal fun PlanCanvas(home: Home, view: SquarePlanView) {
                 }
             }
     ) {
+        view.version // lido para redesenhar quando o modelo muda
+        view.drawCount++
+
         fun pathOf(points: Array<FloatArray>): Path = Path().apply {
             points.forEachIndexed { i, p -> if (i == 0) moveTo(p[0], p[1]) else lineTo(p[0], p[1]) }
             close()

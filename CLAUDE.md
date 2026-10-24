@@ -16,7 +16,10 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
   `com.eteks.sweethome3d.viewcontroller.ViewFactory` (uma `SquareViewFactory`).
   Os controllers originais ficam intactos.
 - Stack: Kotlin, Compose Multiplatform Desktop (interface e planta 2D),
-  jMonkeyEngine 3 / LWJGL3 (3D), Gradle com Kotlin DSL, JDK 21.
+  jMonkeyEngine 3 / LWJGL3 (3D), Gradle com Kotlin DSL, JDK 25.
+- **Interface sem Material** (nem 2 nem 3): o Square terá componentes próprios
+  no estilo Braun, sobre `compose.foundation`. Não crie design system sem
+  decisão do Leonardo.
 - Licença: GPL v2 ou posterior (herdada do SH3D). Preserve os avisos originais.
 - Ambiente principal: Fedora Linux.
 
@@ -24,6 +27,8 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
 
 - Indentação de **4 espaços** em todo código (Kotlin, Java, Gradle, scripts).
 - Nas respostas: explique termos técnicos e deixe as suposições explícitas.
+- Decisões: pergunte ao Leonardo as de gosto, prioridade ou produto; as técnicas
+  com resposta clara, resolva e explique.
 - Código minimalista: antes de criar algo, verifique se o SH3D já tem.
 
 ## Comandos
@@ -31,6 +36,9 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
 - Verificar o núcleo sem Gradle e sem internet: `./scripts/verify-core.sh`
 - Compilar o núcleo: `./gradlew :sh3d-core:jar`
 - Rodar o app: `./gradlew :app:run`
+
+- Arquivos `.sh3d` e `samples/` não vão para o git. Gerar o de teste:
+  `samples/teste-simples.sh3d` via `scripts/CoreSmoke.java`.
 
 ## Detalhes que já custaram tempo
 

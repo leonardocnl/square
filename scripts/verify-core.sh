@@ -10,7 +10,7 @@ src="$root/vendor/sh3d/src"
 
 cd "$src"
 find com/eteks/sweethome3d/{model,viewcontroller,io,tools} -name '*.java' > "$out/files.txt"
-javac --release 21 -nowarn -encoding ISO-8859-1 \
+javac --release 25 -nowarn -encoding ISO-8859-1 \
     -cp "$root/vendor/sh3d/lib-compile/AppleJavaExtensions.jar" \
     -d "$out/classes" @"$out/files.txt"
 find com/eteks/sweethome3d/{model,viewcontroller,io,tools} -type f \

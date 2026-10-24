@@ -10,7 +10,7 @@ val corePackages = listOf("model", "viewcontroller", "io", "tools")
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 

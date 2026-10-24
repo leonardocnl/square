@@ -6,3 +6,5 @@ build/
 *.iml
 .kotlin/
 local.properties
+*.sh3d
+samples/

@@ -13,13 +13,17 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
 - Os pacotes `swing` e `j3d` do SH3D **não entram no app**; servem só de
   referência de comportamento.
 - A interface nova implementa a classe abstrata
-  `com.eteks.sweethome3d.viewcontroller.ViewFactory` (uma `SquareViewFactory`).
+  `com.eteks.sweethome3d.viewcontroller.ViewFactory` (uma `SquareViewFactory`; no 7.5 `ViewFactory` é uma interface).
   Os controllers originais ficam intactos.
 - Stack: Kotlin, Compose Multiplatform Desktop (interface e planta 2D),
   jMonkeyEngine 3 / LWJGL3 (3D), Gradle com Kotlin DSL, JDK 25.
 - **Interface sem Material** (nem 2 nem 3): o Square terá componentes próprios
   no estilo Braun, sobre `compose.foundation`. Não crie design system sem
   decisão do Leonardo.
+- **Diferença intencional em relação ao SH3D** (planta): a roda sozinha dá zoom
+  centrado no cursor (10% por clique, constante `ZOOM_STEP`); pan com botão do
+  meio ou espaço + arraste; F ou Ctrl+0 enquadram o projeto. No SH3D original a
+  roda rola e Ctrl+roda dá zoom de 5%.
 - Licença: GPL v2 ou posterior (herdada do SH3D). Preserve os avisos originais.
 - Ambiente principal: Fedora Linux.
 

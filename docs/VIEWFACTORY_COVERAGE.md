@@ -7,7 +7,7 @@ tem paridade completa quando todos estiverem "pronto".
 |---|---|---|
 | `createFurnitureCatalogView` | `View` | pendente |
 | `createFurnitureView` | `View` | pendente |
-| `createPlanView` | `PlanView` | pendente |
+| `createPlanView` | `PlanView` | parcial |
 | `createView3D` | `View` | pendente |
 | `createHomeView` | `HomeView` | pendente |
 | `createWizardView` | `DialogView` | pendente |
@@ -35,3 +35,17 @@ tem paridade completa quando todos estiverem "pronto".
 | `createPhotosView` | `DialogView` | pendente |
 | `createVideoView` | `DialogView` | pendente |
 | `createHelpView` | `HelpView` | pendente |
+
+## Parcial: `createPlanView` → `SquarePlanView`
+
+Pronto: escala (`getScale`/`setScale`, limites e zoom pelo `PlanController`
+original), conversões pixel/modelo, `getPixelLength`, `moveView`, enquadrar.
+
+Ainda sem implementação (no-op com `// TODO`, não afetam o pan/zoom):
+feedbacks de edição (retângulo, tooltips, alinhamento, ângulo, arraste,
+cotas), cursores, `makeSelectionVisible`/`makePointVisible`.
+Falham alto com `TODO()` se chamados: `getTextBounds`, réguas,
+`getPrintPreferredScale`, `getPieceOfFurnitureSizeInPlan`, `createTransferData`,
+`exportData`.
+
+Os demais 29 métodos da `SquareViewFactory` são `TODO()`.

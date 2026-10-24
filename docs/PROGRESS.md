@@ -18,6 +18,11 @@
   `samples/teste-simples.sh3d`: gere-o antes com o CoreSmoke (veja CLAUDE.md).
 - `:app:run` compila e abre a janela; botão feito só com `foundation`.
 
+- `SquareViewFactory` + `SquarePlanView` (parcial) ligadas ao `PlanController`
+  original; o zoom passa por `PlanController.zoom`/`setScale`. `:app:test`
+  dirige a entrada real e salva `1-fit`, `2-zoom`, `3-pan` em
+  `app/build/screenshots/`.
+
 ## Marco 0 — pendente (fazer no Fedora)
 
 - [x] Conferir e atualizar versões em `gradle/libs.versions.toml`
@@ -26,7 +31,7 @@
       compilado.
 - [x] Abrir `.sh3d` gerado pelo núcleo (CoreSmoke) no canvas Compose.
 - [ ] Abrir um `.sh3d` real feito no SH3D (Leonardo vai fornecer).
-- [ ] Pan e zoom suaves.
+- [x] Pan e zoom (roda no cursor, botão do meio/espaço, F/Ctrl+0); "suave" = escala exponencial, sem inércia/animação.
 - [ ] Janela 3D separada (jMonkeyEngine): paredes e pisos, PBR, sombras, SSAO,
       câmera orbital.
 - [ ] Atualização das vistas pelos listeners originais do SH3D.

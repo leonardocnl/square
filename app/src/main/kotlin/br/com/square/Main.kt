@@ -37,7 +37,7 @@ fun main(args: Array<String>) = application {
             ) {
                 BasicText("Abrir .sh3d", style = TextStyle(color = background))
             }
-            home?.let { PlanCanvas(it) }
+            home?.let { PlanCanvas(it, remember(it) { planViewOf(it) }) }
         }
     }
 }

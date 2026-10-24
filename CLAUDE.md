@@ -44,6 +44,11 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
 - Verificar o núcleo sem Gradle e sem internet: `./scripts/verify-core.sh`
 - Compilar o núcleo: `./gradlew :sh3d-core:jar`
 - Rodar o app: `./gradlew :app:run`
+- **Testes e medições de 3D (jME/Skia) SEMPRE por `./scripts/run-limited.sh <tarefas gradle>`**:
+  limite de 3 GB sem swap (`systemd-run --user --scope`), sem daemon e com timeout (padrão 300 s;
+  `MEM_MAX`, `TIMEOUT` ajustáveis). A memória nativa do Skia/jME não respeita `-Xmx`; sem o limite,
+  duas medições esgotaram a RAM e travaram o computador. Medições: avisar o Leonardo para fechar
+  navegador/IDE e esperar o ok antes de rodar; sempre com timeout, fechando as janelas ao terminar.
 
 - Arquivos `.sh3d` e `samples/` não vão para o git. Gerar o de teste:
   `samples/teste-simples.sh3d` via `scripts/CoreSmoke.java`.

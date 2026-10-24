@@ -23,6 +23,12 @@
   dirige a entrada real e salva `1-fit`, `2-zoom`, `3-pan` em
   `app/build/screenshots/`.
 
+- `HomeChangeWatcher`: CollectionListener por coleção do Home + PropertyChangeListener
+  por item; `close()` remove tudo (o Home troca a lista interna a cada add/delete,
+  então os itens vigiados são rastreados pelo watcher). A view sobe um contador
+  `version` lido no desenho: o Compose junta mudanças seguidas num redesenho por frame.
+  Limite: ainda não observa câmera, bússola, preferências nem itens dentro de grupos de móveis.
+
 ## Marco 0 — pendente (fazer no Fedora)
 
 - [x] Conferir e atualizar versões em `gradle/libs.versions.toml`
@@ -34,7 +40,7 @@
 - [x] Pan e zoom (roda no cursor, botão do meio/espaço, F/Ctrl+0); "suave" = escala exponencial, sem inércia/animação.
 - [ ] Janela 3D separada (jMonkeyEngine): paredes e pisos, PBR, sombras, SSAO,
       câmera orbital.
-- [ ] Atualização das vistas pelos listeners originais do SH3D.
+- [x] Atualização da planta pelos listeners originais do SH3D (`HomeChangeWatcher`; a 3D vai reutilizá-lo).
 
 ## Problemas conhecidos
 

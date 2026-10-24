@@ -47,6 +47,7 @@ class Square3DApp(
     private val home: Home,
     controller: HomeController3D,
     private val offscreen: Boolean = false,
+    private val onClosed: (WindowBounds?) -> Unit = {},
 ) : SimpleApplication(*emptyArray<AppState>()) {
     val input = Home3DInput(home, controller)
 
@@ -77,7 +78,12 @@ class Square3DApp(
 
     override fun destroy() {
         watcher?.close()
+        val window = context as? com.jme3.system.lwjgl.LwjglWindow
+        val bounds = if (!offscreen && window != null) {
+            WindowBounds(window.windowXPosition, window.windowYPosition, cam.width, cam.height)
+        } else null
         super.destroy()
+        onClosed(bounds)
     }
 
     /** Reconstrói tudo; ainda sem atualização incremental por item (pendente). */

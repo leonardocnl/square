@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class Home3DTest {
@@ -74,5 +75,24 @@ class Home3DTest {
         } finally {
             project.close()
         }
+    }
+
+    @Test
+    fun detachedWindowKeepsSh3dProperties() {
+        val home = roomHome()
+        val prefix = "com.eteks.sweethome3d.swing.HomeComponent3D"
+        home.setProperty("$prefix.detachedViewWidth", "640")
+        home.setProperty("$prefix.detachedViewHeight", "480")
+        val project = SquareProject(home)
+        project.view3D.openWindow()
+        assertTrue(project.view3D.isOpen)
+        assertEquals("true", home.getProperty("$prefix.detachedView"))
+        Thread.sleep(1500) // deixa a janela real renderizar alguns frames
+        project.view3D.close()
+        assertEquals("false", home.getProperty("$prefix.detachedView"))
+        assertEquals("640", home.getProperty("$prefix.detachedViewWidth"))
+        assertEquals("480", home.getProperty("$prefix.detachedViewHeight"))
+        assertTrue(home.getProperty("$prefix.detachedViewX") != null)
+        project.close()
     }
 }

@@ -19,10 +19,14 @@ import com.jme3.math.FastMath
 import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
 import com.jme3.post.SceneProcessor
+import com.jme3.post.FilterPostProcessor
+import com.jme3.post.ssao.SSAOFilter
 import com.jme3.profile.AppProfiler
+import com.jme3.shadow.DirectionalLightShadowRenderer
 import com.jme3.renderer.RenderManager
 import com.jme3.renderer.ViewPort
 import com.jme3.renderer.queue.RenderQueue
+import com.jme3.renderer.queue.RenderQueue.ShadowMode
 import com.jme3.scene.Geometry
 import com.jme3.scene.Mesh
 import com.jme3.scene.Node
@@ -65,9 +69,23 @@ class Square3DApp(
         addCaptureProcessor()
         rootNode.attachChild(sceneNode)
         rootNode.addLight(AmbientLight(ColorRGBA(0.45f, 0.45f, 0.45f, 1f)))
-        rootNode.addLight(DirectionalLight(Vector3f(-0.4f, -1f, -0.6f).normalizeLocal(), ColorRGBA(0.9f, 0.9f, 0.9f, 1f)))
+        val sun = DirectionalLight(Vector3f(-0.4f, -1f, -0.6f).normalizeLocal(), ColorRGBA(0.9f, 0.9f, 0.9f, 1f))
+        rootNode.addLight(sun)
+        addShadowsAndSsao(sun)
         watcher = HomeChangeWatcher(home, { geometryDirty.set(true) }, { cameraDirty.set(true) })
         inputManager?.addRawInputListener(MouseAndKeys())
+    }
+
+    /** Valores provisórios (cm): o visual final será decidido depois. */
+    private fun addShadowsAndSsao(sun: DirectionalLight) {
+        viewPort.addProcessor(DirectionalLightShadowRenderer(assetManager, SHADOW_MAP_SIZE, 3).apply {
+            light = sun
+            shadowIntensity = 0.5f
+            shadowZExtend = SHADOW_DISTANCE
+        })
+        viewPort.addProcessor(FilterPostProcessor(assetManager).apply {
+            addFilter(SSAOFilter(SSAO_RADIUS, SSAO_INTENSITY, SSAO_SCALE, SSAO_BIAS))
+        })
     }
 
     override fun simpleUpdate(tpf: Float) {
@@ -79,8 +97,14 @@ class Square3DApp(
     override fun destroy() {
         watcher?.close()
         val window = context as? com.jme3.system.lwjgl.LwjglWindow
+        // No Wayland o GLFW não informa a posição da janela (o compositor decide): só tamanho.
+        val knowsPosition = org.lwjgl.glfw.GLFW.glfwGetPlatform() != org.lwjgl.glfw.GLFW.GLFW_PLATFORM_WAYLAND
         val bounds = if (!offscreen && window != null) {
-            WindowBounds(window.windowXPosition, window.windowYPosition, cam.width, cam.height)
+            WindowBounds(
+                if (knowsPosition) window.windowXPosition else null,
+                if (knowsPosition) window.windowYPosition else null,
+                cam.width, cam.height
+            )
         } else null
         super.destroy()
         onClosed(bounds)
@@ -94,14 +118,14 @@ class Square3DApp(
         sceneNode.attachChild(ground(rgb(env.groundColor)))
         for (wall in home.walls) {
             val mesh = wallMesh(home, wall) ?: continue
-            sceneNode.attachChild(geometry("wall", mesh, rgb(wall.leftSideColor ?: DEFAULT_WALL_COLOR)))
+            sceneNode.attachChild(geometry("wall", mesh, rgb(wall.leftSideColor ?: DEFAULT_WALL_COLOR), ShadowMode.CastAndReceive))
         }
         for (room in home.rooms) {
             roomMesh(home, room, ceiling = false)?.let {
-                sceneNode.attachChild(geometry("floor", it, rgb(room.floorColor ?: DEFAULT_FLOOR_COLOR)))
+                sceneNode.attachChild(geometry("floor", it, rgb(room.floorColor ?: DEFAULT_FLOOR_COLOR), ShadowMode.Receive))
             }
             roomMesh(home, room, ceiling = true)?.let {
-                sceneNode.attachChild(geometry("ceiling", it, rgb(room.ceilingColor ?: DEFAULT_CEILING_COLOR)))
+                sceneNode.attachChild(geometry("ceiling", it, rgb(room.ceilingColor ?: DEFAULT_CEILING_COLOR), ShadowMode.Off))
             }
         }
         cameraDirty.set(true)
@@ -115,17 +139,21 @@ class Square3DApp(
         setFloat("Roughness", 0.9f)
     }
 
-    private fun geometry(name: String, data: MeshData, color: ColorRGBA) = Geometry(name, Mesh().apply {
+    private fun geometry(name: String, data: MeshData, color: ColorRGBA, shadows: ShadowMode) = Geometry(name, Mesh().apply {
         setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(*data.positions))
         setBuffer(VertexBuffer.Type.Normal, 3, BufferUtils.createFloatBuffer(*data.normals))
         setBuffer(VertexBuffer.Type.Index, 3, BufferUtils.createIntBuffer(*data.indices))
         updateBound()
         updateCounts()
-    }).apply { material = material(color) }
+    }).apply {
+        material = material(color)
+        shadowMode = shadows
+    }
 
     /** Chão grande um pouco abaixo de 0 para não brigar com os pisos. */
     private fun ground(color: ColorRGBA) = Geometry("ground", Quad(GROUND_SIZE, GROUND_SIZE)).apply {
         material = material(color)
+        shadowMode = ShadowMode.Receive
         setLocalRotation(Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X))
         setLocalTranslation(-GROUND_SIZE / 2, -0.5f, GROUND_SIZE / 2)
     }
@@ -235,6 +263,12 @@ class Square3DApp(
     }
 
     private companion object {
+        const val SHADOW_MAP_SIZE = 2048
+        const val SHADOW_DISTANCE = 8_000f
+        const val SSAO_RADIUS = 60f
+        const val SSAO_INTENSITY = 3f
+        const val SSAO_SCALE = 0.02f
+        const val SSAO_BIAS = 0.1f
         const val NEAR = 2.5f
         const val FAR = 100_000f
         const val GROUND_SIZE = 200_000f

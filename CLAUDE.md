@@ -63,6 +63,11 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
 - **jME e Compose convivem** no mesmo processo (testado em `JmeSmokeTest`:
   janela Compose aberta + jME offscreen + jME em janela). Em testes, use
   `application(exitProcessOnExit = false)`, senão o Compose encerra a JVM do teste.
+- **jME no Wayland:** o GLFW roda nativo em Wayland e **não informa a posição da janela**
+  (log `SEVERE: Wayland: The platform does not provide the window position`); a janela
+  3D destacada só guarda tamanho nesse caso (`Square3DApp.destroy`).
+- **Unidades do jME = cm** (como o SH3D): os parâmetros padrão do `SSAOFilter` são para
+  metros; `scale` precisa ser ~0,02 (com 30 o efeito some).
 - Para render offscreen do jME: `FrameBuffer` próprio como saída da `ViewPort` +
   `SceneProcessor.postFrame` lendo com `renderer.readFrameBuffer` (veja
   `app/src/test/.../JmeSmokeTest.kt`); a leitura vem de baixo para cima.

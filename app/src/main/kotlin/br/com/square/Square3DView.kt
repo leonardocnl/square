@@ -57,8 +57,10 @@ class Square3DView(private val home: Home, private val controller: HomeControlle
     private fun windowClosed(bounds: WindowBounds?) {
         app = null
         if (bounds != null) {
-            home.setProperty(PROPERTY_PREFIX + X, bounds.x.toString())
-            home.setProperty(PROPERTY_PREFIX + Y, bounds.y.toString())
+            if (bounds.x != null && bounds.y != null) {
+                home.setProperty(PROPERTY_PREFIX + X, bounds.x.toString())
+                home.setProperty(PROPERTY_PREFIX + Y, bounds.y.toString())
+            }
             home.setProperty(PROPERTY_PREFIX + WIDTH, bounds.width.toString())
             home.setProperty(PROPERTY_PREFIX + HEIGHT, bounds.height.toString())
             // Como no SH3D, fechar a janela destacada recoloca a vista no painel.
@@ -85,4 +87,5 @@ class Square3DView(private val home: Home, private val controller: HomeControlle
     }
 }
 
-class WindowBounds(val x: Int, val y: Int, val width: Int, val height: Int)
+/** [x] e [y] são nulos quando a plataforma (Wayland) não informa a posição. */
+class WindowBounds(val x: Int?, val y: Int?, val width: Int, val height: Int)

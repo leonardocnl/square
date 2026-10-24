@@ -35,6 +35,10 @@
   (mouse/teclas → `HomeController3D` original). Testes: `Home3DTest` (PNGs
   `3d-aerea`, `3d-orbita`, `3d-modelo-alterado`) e `Home3DInputTest`.
 
+- 3D visual provisório: PBR simples, luz direcional com sombra (3 cascatas, 8 m), ambiente e SSAO
+  (`Square3DApp.addShadowsAndSsao`). Conhecido: faixa escura de ~3 px no topo da imagem (borda do SSAO);
+  sem light probe, a PBR sai mais escura que o SH3D. O visual final será decidido com o Leonardo.
+
 ## Paridade com o SH3D (regra para o que vem a seguir)
 
 Quando chegarmos a portas/janelas, rodapés e materiais/texturas por lado, a

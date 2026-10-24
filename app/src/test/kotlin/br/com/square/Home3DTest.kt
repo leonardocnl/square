@@ -92,7 +92,6 @@ class Home3DTest {
         assertEquals("false", home.getProperty("$prefix.detachedView"))
         assertEquals("640", home.getProperty("$prefix.detachedViewWidth"))
         assertEquals("480", home.getProperty("$prefix.detachedViewHeight"))
-        assertTrue(home.getProperty("$prefix.detachedViewX") != null)
         project.close()
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,14 +31,29 @@ fun main(args: Array<String>) = application {
         val project = remember(home) { home?.let { SquareProject(it) } }
         DisposableEffect(project) { onDispose { project?.close() } }
 
+        // Se o arquivo foi salvo com a vista 3D destacada, ela reabre destacada.
+        LaunchedEffect(project) { project?.view3D?.let { if (it.detached) it.openWindow() } }
+
         Column(Modifier.fillMaxSize().background(background)) {
             Row {
                 ToolButton("Abrir .sh3d") { home = openHome() }
                 project?.let { p ->
-                    ToolButton("Janela 3D") { if (p.view3D.isOpen) p.view3D.close() else p.view3D.openWindow() }
+                    ToolButton(if (p.view3D.detached) "Recolocar 3D" else "Destacar 3D") {
+                        val view = p.view3D
+                        if (view.detached) view.close() // a janela fechada recoloca a vista no painel
+                        else {
+                            view.close() // fecha o painel antes de abrir a janela
+                            view.openWindow()
+                        }
+                    }
                 }
             }
-            project?.let { PlanCanvas(it.home, it.planView) }
+            project?.let { p ->
+                Row(Modifier.fillMaxSize()) {
+                    PlanCanvas(p.home, p.planView, Modifier.weight(1f))
+                    if (!p.view3D.detached) Home3DPanel(p.view3D, Modifier.weight(1f))
+                }
+            }
         }
     }
 }

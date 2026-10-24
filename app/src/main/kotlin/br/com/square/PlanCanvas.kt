@@ -41,13 +41,13 @@ internal val roomFill = Color(0xFFEBEBE7)
  * pan com botão do meio ou espaço + arraste; F ou Ctrl+0 enquadram o projeto.
  */
 @Composable
-internal fun PlanCanvas(home: Home, view: SquarePlanView) {
+internal fun PlanCanvas(home: Home, view: SquarePlanView, modifier: Modifier = Modifier) {
     val focus = remember { FocusRequester() }
     var spaceDown by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { focus.requestFocus() }
 
     Canvas(
-        Modifier.fillMaxSize()
+        modifier.fillMaxSize()
             .onSizeChanged { view.onSize(it.toSize()) }
             .focusRequester(focus)
             .focusable()

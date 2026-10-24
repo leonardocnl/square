@@ -1,5 +1,8 @@
 package br.com.square
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.eteks.sweethome3d.model.Home
 import com.eteks.sweethome3d.viewcontroller.HomeController3D
 import com.eteks.sweethome3d.viewcontroller.View
@@ -17,6 +20,10 @@ class Square3DView(private val home: Home, private val controller: HomeControlle
 
     val isOpen get() = app != null
 
+    /** A vista está numa janela própria (e não no painel)? Mesma propriedade `.detachedView` do SH3D. */
+    var detached by mutableStateOf(home.getProperty(PROPERTY_PREFIX + DETACHED).toBoolean())
+        private set
+
     /** Abre a vista numa janela do jME, na posição e no tamanho guardados no Home, se houver. */
     fun openWindow(): Square3DApp {
         fun number(key: String) = home.getNumericProperty(PROPERTY_PREFIX + key)?.toInt()
@@ -31,20 +38,30 @@ class Square3DView(private val home: Home, private val controller: HomeControlle
             } else {
                 centerWindow = true
             }
-        }.also { home.setProperty(PROPERTY_PREFIX + DETACHED, true.toString()) }
+        }.also {
+            home.setProperty(PROPERTY_PREFIX + DETACHED, true.toString())
+            detached = true
+        }
     }
 
     /** Modo integrado: renderiza fora da tela e entrega cada frame (RGBA, de baixo para cima) a [onFrame]. */
     fun openIntegrated(width: Int, height: Int, frameRate: Int = 60, onFrame: (ByteBuffer, Int, Int) -> Unit): Square3DApp =
-        openOffscreen(width, height, frameRate).also { it.frameListener = onFrame }
+        start(true, width, height, JmeContext.Type.OffscreenSurface, onDemand = true, frameListener = onFrame) {
+            setFrameRate(frameRate)
+        }
 
     /** Renderiza fora da tela; use [Square3DApp.screenshot]. */
     fun openOffscreen(width: Int, height: Int, frameRate: Int = 60): Square3DApp =
         start(true, width, height, JmeContext.Type.OffscreenSurface) { setFrameRate(frameRate) }
 
-    private fun start(offscreen: Boolean, width: Int, height: Int, type: JmeContext.Type, configure: AppSettings.() -> Unit): Square3DApp {
+    private fun start(
+        offscreen: Boolean, width: Int, height: Int, type: JmeContext.Type,
+        onDemand: Boolean = false, frameListener: ((ByteBuffer, Int, Int) -> Unit)? = null,
+        configure: AppSettings.() -> Unit
+    ): Square3DApp {
         check(app == null) { "a vista 3D já está aberta" }
-        return Square3DApp(home, controller, offscreen, onClosed = ::windowClosed).also {
+        return Square3DApp(home, controller, offscreen, onDemand, onClosed = ::windowClosed).also {
+            it.frameListener = frameListener // antes do start: o primeiro frame não pode se perder
             it.isShowSettings = false
             it.setSettings(AppSettings(true).apply {
                 setResolution(width, height)
@@ -70,11 +87,17 @@ class Square3DView(private val home: Home, private val controller: HomeControlle
             home.setProperty(PROPERTY_PREFIX + HEIGHT, bounds.height.toString())
             // Como no SH3D, fechar a janela destacada recoloca a vista no painel.
             home.setProperty(PROPERTY_PREFIX + DETACHED, false.toString())
+            detached = false
         }
     }
 
     fun close() {
         app?.stop(true)
+    }
+
+    /** Fecha só [target]; não faz nada se a vista já foi aberta de outro jeito (painel → janela). */
+    fun close(target: Square3DApp) {
+        if (app === target) target.stop(true)
     }
 
     fun dispose() = close()

@@ -5,16 +5,16 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.scale
-import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isAltPressed
@@ -31,10 +31,6 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import com.jme3.input.KeyInput
-import org.jetbrains.skia.ColorAlphaType
-import org.jetbrains.skia.ColorType
-import org.jetbrains.skia.ImageInfo
-import java.nio.ByteBuffer
 
 /**
  * Vista 3D integrada: o jME renderiza fora da tela e cada frame vira uma imagem do Compose.
@@ -42,20 +38,30 @@ import java.nio.ByteBuffer
  */
 @Composable
 fun Home3DPanel(view: Square3DView, modifier: Modifier = Modifier, frameRate: Int = 60, onFrameForBench: (() -> Unit)? = null) {
-    var frame by remember { mutableStateOf<ImageBitmap?>(null) }
     var size by remember { mutableStateOf(IntSize.Zero) }
+    var app by remember { mutableStateOf<Square3DApp?>(null) }
+    val sink = remember(view) { FrameSink() }
     val focus = remember { FocusRequester() }
+    val ready = size.width > 0 && size.height > 0
 
-    // Um app jME por tamanho: ao redimensionar, ele reajusta o alvo (Square3DApp.resize).
-    val app = remember(view, size.width > 0 && size.height > 0) {
-        if (size.width > 0 && size.height > 0) view.openIntegrated(size.width, size.height, frameRate) { buffer, w, h ->
-            frame = toImage(buffer, w, h)
-            onFrameForBench?.invoke()
-        } else null
+    // O app jME nasce quando o tamanho é conhecido; depois só reajusta o alvo (Square3DApp.resize).
+    LaunchedEffect(view, ready) {
+        if (ready && !view.isOpen) {
+            app = view.openIntegrated(size.width, size.height, frameRate) { buffer, w, h ->
+                sink.publish(buffer, w, h)
+                onFrameForBench?.invoke()
+            }
+        }
     }
-    // Só fecha ao descartar um app de verdade: o efeito de `app == null` não pode fechar o novo.
-    DisposableEffect(app) { onDispose { if (app != null) view.close() } }
-    app?.let { if (size.width != it.width || size.height != it.height) it.resize(size.width, size.height) }
+    LaunchedEffect(app, size) { app?.let { if (ready && (size.width != it.width || size.height != it.height)) it.resize(size.width, size.height) } }
+    val current = rememberUpdatedState(app)
+    DisposableEffect(view) {
+        onDispose {
+            // Só o app do painel: ao destacar, a janela nova não pode ser fechada junto.
+            current.value?.let(view::close)
+            sink.close()
+        }
+    }
 
     Canvas(
         modifier.fillMaxSize()
@@ -90,16 +96,10 @@ fun Home3DPanel(view: Square3DView, modifier: Modifier = Modifier, frameRate: In
             }
     ) {
         // O jME lê de baixo para cima; inverter aqui não custa CPU.
-        frame?.let { image -> scale(1f, -1f) { drawImage(image) } }
+        synchronized(sink.lock) {
+            sink.current?.let { image -> scale(1f, -1f) { drawImage(image) } }
+        }
     }
-}
-
-private fun toImage(buffer: ByteBuffer, w: Int, h: Int): ImageBitmap {
-    val bytes = ByteArray(w * h * 4)
-    buffer.rewind()
-    buffer.get(bytes)
-    return org.jetbrains.skia.Image.makeRaster(ImageInfo(w, h, ColorType.RGBA_8888, ColorAlphaType.OPAQUE), bytes, w * 4)
-        .toComposeImageBitmap()
 }
 
 private val keyCodes = mapOf(

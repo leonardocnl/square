@@ -46,16 +46,21 @@ import kotlin.math.tan
 /**
  * Vista 3D do Home em jMonkeyEngine. A câmera é a do Home (alterada pelo
  * HomeController3D original); aqui só se lê e se aplica. [offscreen] renderiza
- * num framebuffer próprio, de onde [screenshot] lê a imagem (testes).
+ * num framebuffer próprio, de onde [screenshot] lê a imagem (testes). Com [onDemand] (painel
+ * integrado) só renderiza e entrega frames quando a câmera ou o modelo mudam; parado, não custa GPU
+ * nem leitura de pixels.
  */
 class Square3DApp(
     private val home: Home,
     controller: HomeController3D,
     private val offscreen: Boolean = false,
+    private val onDemand: Boolean = false,
     private val onClosed: (WindowBounds?) -> Unit = {},
 ) : SimpleApplication(*emptyArray<AppState>()) {
     val input = Home3DInput(home, controller)
 
+    private val renderRequested = AtomicBoolean(true)
+    private var renderFramesLeft = 0
     private val geometryDirty = AtomicBoolean(true)
     private val cameraDirty = AtomicBoolean(true)
     private val sceneNode = Node("home")
@@ -79,7 +84,11 @@ class Square3DApp(
         val sun = DirectionalLight(Vector3f(-0.4f, -1f, -0.6f).normalizeLocal(), ColorRGBA(0.9f, 0.9f, 0.9f, 1f))
         rootNode.addLight(sun)
         addShadowsAndSsao(sun)
-        watcher = HomeChangeWatcher(home, { geometryDirty.set(true) }, { cameraDirty.set(true) })
+        watcher = HomeChangeWatcher(
+            home,
+            { geometryDirty.set(true); renderRequested.set(true) },
+            { cameraDirty.set(true); renderRequested.set(true) }
+        )
         inputManager?.addRawInputListener(MouseAndKeys())
     }
 
@@ -99,6 +108,12 @@ class Square3DApp(
         input.update(tpf)
         if (geometryDirty.getAndSet(false)) rebuild()
         if (cameraDirty.getAndSet(false)) syncCamera()
+        if (onDemand) {
+            // 2 frames por mudança: o do estado novo e mais um para sombra/SSAO assentarem.
+            if (renderRequested.getAndSet(false)) renderFramesLeft = SETTLE_FRAMES
+            viewPort.isEnabled = renderFramesLeft > 0 || captureRequest != null
+            if (renderFramesLeft > 0) renderFramesLeft--
+        }
     }
 
     override fun destroy() {
@@ -192,6 +207,7 @@ class Square3DApp(
                 initOffscreenTarget()
                 viewPort.processors.forEach { it.reshape(viewPort, w, h) }
                 cameraDirty.set(true)
+                renderRequested.set(true)
             }
         }
     }
@@ -299,6 +315,7 @@ class Square3DApp(
     }
 
     private companion object {
+        const val SETTLE_FRAMES = 2
         const val SHADOW_MAP_SIZE = 2048
         const val SHADOW_DISTANCE = 8_000f
         const val SSAO_RADIUS = 60f

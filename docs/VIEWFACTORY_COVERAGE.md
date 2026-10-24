@@ -8,7 +8,7 @@ tem paridade completa quando todos estiverem "pronto".
 | `createFurnitureCatalogView` | `View` | pendente |
 | `createFurnitureView` | `View` | pendente |
 | `createPlanView` | `PlanView` | parcial |
-| `createView3D` | `View` | pendente |
+| `createView3D` | `View` | parcial |
 | `createHomeView` | `HomeView` | pendente |
 | `createWizardView` | `DialogView` | pendente |
 | `createBackgroundImageWizardStepsView` | `View` | pendente |
@@ -48,4 +48,11 @@ Falham alto com `TODO()` se chamados: `getTextBounds`, réguas,
 `getPrintPreferredScale`, `getPieceOfFurnitureSizeInPlan`, `createTransferData`,
 `exportData`.
 
-Os demais 29 métodos da `SquareViewFactory` são `TODO()`.
+## Parcial: `createView3D` → `Square3DView`
+
+Pronto: janela jME e modo offscreen, câmera do `Home` (HomeController3D original),
+paredes, pisos, tetos, chão e céu (cores do `HomeEnvironment`), entrada de mouse/teclado.
+Falta: portas, janelas, móveis, texturas, rodapés, luzes do modelo, sombra/SSAO,
+modo integrado na janela principal, persistência da janela destacada.
+
+Os demais 28 métodos da `SquareViewFactory` são `TODO()`.

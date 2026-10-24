@@ -24,6 +24,10 @@ mesmas funcionalidades, interface e 3D novos, mais rápidos e mais bonitos.
   centrado no cursor (10% por clique, constante `ZOOM_STEP`); pan com botão do
   meio ou espaço + arraste; F ou Ctrl+0 enquadram o projeto. No SH3D original a
   roda rola e Ctrl+roda dá zoom de 5%.
+- **Diferenças intencionais na vista 3D:** V alterna vista aérea/visitante e Q/E
+  giram (extras). Os atalhos do SH3D prevalecem em conflito: A/D giram (não
+  deslizam) e as setas esquerda/direita giram (não andam); Alt + seta desliza.
+  Valores e teclas vêm de `swing/HomeComponent3D.java` (ver `Home3DInput`).
 - Licença: GPL v2 ou posterior (herdada do SH3D). Preserve os avisos originais.
 - Ambiente principal: Fedora Linux.
 

@@ -29,6 +29,30 @@
   `version` lido no desenho: o Compose junta mudanças seguidas num redesenho por frame.
   Limite: ainda não observa câmera, bússola, preferências nem itens dentro de grupos de móveis.
 
+- 3D (jME): `Geometry3D.kt` (malhas sem GL: paredes com topo inclinado/redondas e
+  pisos/tetos com furos por sobreposição de cômodos, triangulados com earcut4j),
+  `Square3DApp` (cena, câmera do `Home`, captura offscreen), `Home3DInput`
+  (mouse/teclas → `HomeController3D` original). Testes: `Home3DTest` (PNGs
+  `3d-aerea`, `3d-orbita`, `3d-modelo-alterado`) e `Home3DInputTest`.
+
+## Paridade com o SH3D (regra para o que vem a seguir)
+
+Quando chegarmos a portas/janelas, rodapés e materiais/texturas por lado, a
+geometria deve **seguir `vendor/sh3d/src/com/eteks/sweethome3d/j3d/Wall3D.java`**
+(e `Room3D.java` para pisos e tetos), não uma lógica nova. Já alinhado com eles:
+elevações (nível, espessura do piso, `LEVEL_ELEVATION_SHIFT`), topo inclinado pela
+projeção no eixo da parede (vale também para paredes redondas), arestas sobre o
+eixo ignoradas, cômodos posteriores do mesmo nível cobrindo os anteriores.
+Ainda diferente: sem face de baixo nas paredes, sem espessura de laje entre
+níveis, teto sempre em `elevação + altura do nível` (falta `getRoomHeightAt`:
+teto plano/inclinado), sem furos de escada, uma cor por parede (a esquerda),
+sem normais suaves em paredes redondas.
+
+Janela destacada: o SH3D guarda `<classe da vista>.detachedView`, `.detachedViewX/Y/Width/Height`
+e `.detachedViewDividerLocation` no `Home` (`HomePane`), com a chave
+`com.eteks.sweethome3d.swing.HomeComponent3D`. Usar as mesmas chaves, para paridade
+dos arquivos.
+
 ## Marco 0 — pendente (fazer no Fedora)
 
 - [x] Conferir e atualizar versões em `gradle/libs.versions.toml`
@@ -44,6 +68,8 @@
 
 ## Problemas conhecidos
 
+- 3D: a cena é reconstruída inteira a cada mudança do modelo (sem atualização incremental por item).
+- 3D: o jME lê o modelo na própria thread enquanto a interface pode alterá-lo (listas do `Home` são copy-on-write; campos dos itens, não).
 - Móveis dentro de grupos (`HomeFurnitureGroup`) não são observados pelo `HomeChangeWatcher`.
 - Os listeners que o `PlanController` original registra no `Home` não têm remoção
   (a API dele não oferece); só vazam se o Home sobreviver ao controller.

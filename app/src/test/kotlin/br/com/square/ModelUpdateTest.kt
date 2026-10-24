@@ -19,7 +19,7 @@ class ModelUpdateTest {
         val wallA = Wall(0f, 0f, 400f, 0f, 10f, 250f)
         val wallB = Wall(0f, 300f, 400f, 300f, 10f, 250f)
         val home = Home().apply { addWall(wallA); addWall(wallB) }
-        val view = planViewOf(home)
+        val view = SquareProject(home).planView
         val scene = ImageComposeScene(800, 600, Density(1f)) { PlanCanvas(home, view) }
         val dir = File("app/build/screenshots").apply { mkdirs() }
 

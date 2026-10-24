@@ -1,9 +1,7 @@
 package br.com.square
 
 import com.eteks.sweethome3d.model.*
-import com.eteks.sweethome3d.io.DefaultUserPreferences
 import com.eteks.sweethome3d.viewcontroller.*
-import javax.swing.undo.UndoableEditSupport
 
 // Só createPlanView existe por enquanto; o resto falha alto com TODO() até ser
 // implementado (status em docs/VIEWFACTORY_COVERAGE.md).
@@ -15,7 +13,8 @@ class SquareViewFactory : ViewFactory {
     override fun createPlanView(home: Home, preferences: UserPreferences, planController: PlanController): PlanView =
         SquarePlanView(home, planController)
 
-    override fun createView3D(home: Home, preferences: UserPreferences, homeController3D: HomeController3D): View = TODO("ViewFactory.createView3D")
+    override fun createView3D(home: Home, preferences: UserPreferences, homeController3D: HomeController3D): View =
+        Square3DView(home, homeController3D)
 
     override fun createHomeView(home: Home, preferences: UserPreferences, homeController: HomeController): HomeView = TODO("ViewFactory.createHomeView")
 
@@ -68,10 +67,4 @@ class SquareViewFactory : ViewFactory {
     override fun createVideoView(home: Home, preferences: UserPreferences, videoController: VideoController): DialogView = TODO("ViewFactory.createVideoView")
 
     override fun createHelpView(preferences: UserPreferences, helpController: HelpController): HelpView = TODO("ViewFactory.createHelpView")
-}
-
-/** Cria o PlanController original do SH3D e devolve a view dele. */
-fun planViewOf(home: Home): SquarePlanView {
-    val controller = PlanController(home, DefaultUserPreferences(), SquareViewFactory(), null, UndoableEditSupport())
-    return controller.view as SquarePlanView
 }

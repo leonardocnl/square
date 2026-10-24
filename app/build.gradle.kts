@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.jme.desktop)
     implementation(libs.jme.lwjgl3)
     implementation(libs.jme.effects)
+    implementation(libs.earcut4j)
 
     testImplementation(kotlin("test"))
 }

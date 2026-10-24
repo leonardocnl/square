@@ -60,7 +60,7 @@ class SquarePlanView(private val home: Home, private val controller: PlanControl
     var drawCount = 0
         internal set
 
-    private val watcher = HomeChangeWatcher(home) { version++ }
+    private val watcher = HomeChangeWatcher(home, onChange = { version++ })
 
     /** Remove os listeners do Home; chame ao descartar a view. */
     fun dispose() = watcher.close()

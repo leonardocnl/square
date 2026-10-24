@@ -47,7 +47,7 @@ class PlanScreenshotTest {
     @Test
     fun zoomPanAndFitOnRealInput() {
         val home = HomeFileRecorder().readHome("samples/teste-simples.sh3d")
-        val view = planViewOf(home)
+        val view = SquareProject(home).planView
         val scene = ImageComposeScene(800, 600, Density(1f)) { PlanCanvas(home, view) }
         val dir = File("app/build/screenshots").apply { mkdirs() }
         fun shot(name: String) {

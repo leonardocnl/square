@@ -3,12 +3,14 @@
 kotlin = "2.4.21"
 compose = "1.12.2"
 jme = "3.9.0-stable"
+earcut4j = "2.2.2"
 
 [libraries]
 jme-core = { module = "org.jmonkeyengine:jme3-core", version.ref = "jme" }
 jme-desktop = { module = "org.jmonkeyengine:jme3-desktop", version.ref = "jme" }
 jme-lwjgl3 = { module = "org.jmonkeyengine:jme3-lwjgl3", version.ref = "jme" }
 jme-effects = { module = "org.jmonkeyengine:jme3-effects", version.ref = "jme" }
+earcut4j = { module = "io.github.earcut4j:earcut4j", version.ref = "earcut4j" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

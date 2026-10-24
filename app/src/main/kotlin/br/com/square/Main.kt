@@ -39,9 +39,9 @@ fun main(args: Array<String>) = application {
                 BasicText("Abrir .sh3d", style = TextStyle(color = background))
             }
             home?.let {
-                val view = remember(it) { planViewOf(it) }
-                DisposableEffect(view) { onDispose { view.dispose() } }
-                PlanCanvas(it, view)
+                val project = remember(it) { SquareProject(it) }
+                DisposableEffect(project) { onDispose { project.close() } }
+                PlanCanvas(it, project.planView)
             }
         }
     }

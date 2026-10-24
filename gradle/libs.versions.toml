@@ -1,0 +1,18 @@
+# Versões NÃO verificadas no ambiente onde este arquivo foi criado (sem acesso
+# ao Maven Central). Antes do primeiro build, confira as versões estáveis mais
+# recentes e atualize aqui.
+[versions]
+kotlin = "2.2.20"
+compose = "1.9.0"
+jme = "3.8.1-stable"
+
+[libraries]
+jme-core = { module = "org.jmonkeyengine:jme3-core", version.ref = "jme" }
+jme-desktop = { module = "org.jmonkeyengine:jme3-desktop", version.ref = "jme" }
+jme-lwjgl3 = { module = "org.jmonkeyengine:jme3-lwjgl3", version.ref = "jme" }
+jme-effects = { module = "org.jmonkeyengine:jme3-effects", version.ref = "jme" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }

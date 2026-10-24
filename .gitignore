@@ -1,1 +1,8 @@
 *.zip
+.gradle/
+build/
+*/build/
+.idea/
+*.iml
+.kotlin/
+local.properties

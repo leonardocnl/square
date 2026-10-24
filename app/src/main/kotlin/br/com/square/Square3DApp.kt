@@ -36,6 +36,7 @@ import com.jme3.texture.FrameBuffer
 import com.jme3.texture.Image
 import com.jme3.util.BufferUtils
 import java.awt.image.BufferedImage
+import java.nio.ByteBuffer
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -61,7 +62,13 @@ class Square3DApp(
     private var watcher: HomeChangeWatcher? = null
 
     private var targetBuffer: FrameBuffer? = null
+    /**
+     * Modo integrado: chamado na thread do jME a cada frame offscreen com os pixels RGBA
+     * (de baixo para cima). O buffer só vale durante a chamada.
+     */
+    @Volatile var frameListener: ((ByteBuffer, Int, Int) -> Unit)? = null
     @Volatile private var frames = 0
+    val frameCount get() = frames
     @Volatile private var captureRequest: Pair<Int, CompletableFuture<BufferedImage>>? = null
 
     override fun simpleInitApp() {
@@ -103,7 +110,7 @@ class Square3DApp(
             WindowBounds(
                 if (knowsPosition) window.windowXPosition else null,
                 if (knowsPosition) window.windowYPosition else null,
-                cam.width, cam.height
+                settings.width, settings.height
             )
         } else null
         super.destroy()
@@ -172,6 +179,23 @@ class Square3DApp(
         cam.setFrustumPerspective(Math.toDegrees(vertical.toDouble()).toFloat(), aspect, NEAR, FAR)
     }
 
+    // Vêm das configurações, não de `cam`: o jME só cria a câmera na própria thread, depois do start().
+    val width get() = settings.width
+    val height get() = settings.height
+
+    /** Muda o tamanho do alvo offscreen (painel integrado redimensionado). */
+    fun resize(w: Int, h: Int) {
+        enqueue {
+            if (offscreen && (w != cam.width || h != cam.height)) { // roda na thread do jME: `cam` já existe
+                settings.setResolution(w, h)
+                cam.resize(w, h, true)
+                initOffscreenTarget()
+                viewPort.processors.forEach { it.reshape(viewPort, w, h) }
+                cameraDirty.set(true)
+            }
+        }
+    }
+
     override fun reshape(w: Int, h: Int) {
         super.reshape(w, h)
         cameraDirty.set(true)
@@ -180,6 +204,7 @@ class Square3DApp(
     private fun initOffscreenTarget() {
         val w = cam.width
         val h = cam.height
+        targetBuffer?.dispose()
         val fb = FrameBuffer(w, h, 1)
         fb.setDepthTarget(FrameBuffer.FrameBufferTarget.newTarget(Image.Format.Depth))
         fb.addColorTarget(FrameBuffer.FrameBufferTarget.newTarget(Image.Format.RGBA8))
@@ -197,6 +222,7 @@ class Square3DApp(
             override fun postQueue(rq: RenderQueue) {}
             override fun postFrame(out: FrameBuffer?) {
                 frames++
+                frameListener?.let { listener -> targetBuffer?.let { listener(readPixels(it), it.width, it.height) } }
                 val (minFrame, future) = captureRequest ?: return
                 if (frames < minFrame) return
                 captureRequest = null
@@ -207,11 +233,21 @@ class Square3DApp(
         })
     }
 
+    private var pixels: ByteBuffer? = null
+
+    /** Lê o framebuffer em RGBA, de baixo para cima; o buffer é reaproveitado entre frames. */
+    private fun readPixels(fb: FrameBuffer): ByteBuffer {
+        val buf = pixels?.takeIf { it.capacity() == fb.width * fb.height * 4 }
+            ?: BufferUtils.createByteBuffer(fb.width * fb.height * 4).also { pixels = it }
+        buf.clear()
+        renderManager.renderer.readFrameBuffer(fb, buf)
+        return buf
+    }
+
     private fun readImage(fb: FrameBuffer): BufferedImage {
         val w = fb.width
         val h = fb.height
-        val buf = BufferUtils.createByteBuffer(w * h * 4)
-        renderManager.renderer.readFrameBuffer(fb, buf)
+        val buf = readPixels(fb)
         val image = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
         for (y in 0 until h) for (x in 0 until w) {
             val i = ((h - 1 - y) * w + x) * 4 // OpenGL lê de baixo para cima

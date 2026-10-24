@@ -41,5 +41,8 @@ tasks.withType<JavaExec>().configureEach {
 
 tasks.test {
     jvmArgs("--enable-native-access=ALL-UNNAMED")
+    // Limites explícitos: a medição da vista integrada já esgotou a memória da máquina uma vez.
+    maxHeapSize = "1g"
+    jvmArgs("-XX:MaxDirectMemorySize=512m")
     workingDir = rootDir
 }

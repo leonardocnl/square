@@ -5,6 +5,7 @@ import com.eteks.sweethome3d.viewcontroller.HomeController3D
 import com.eteks.sweethome3d.viewcontroller.View
 import com.jme3.system.AppSettings
 import com.jme3.system.JmeContext
+import java.nio.ByteBuffer
 
 /**
  * View 3D do Square: um app jME por vez, em janela própria (destacada) ou offscreen (testes).
@@ -33,9 +34,13 @@ class Square3DView(private val home: Home, private val controller: HomeControlle
         }.also { home.setProperty(PROPERTY_PREFIX + DETACHED, true.toString()) }
     }
 
+    /** Modo integrado: renderiza fora da tela e entrega cada frame (RGBA, de baixo para cima) a [onFrame]. */
+    fun openIntegrated(width: Int, height: Int, frameRate: Int = 60, onFrame: (ByteBuffer, Int, Int) -> Unit): Square3DApp =
+        openOffscreen(width, height, frameRate).also { it.frameListener = onFrame }
+
     /** Renderiza fora da tela; use [Square3DApp.screenshot]. */
-    fun openOffscreen(width: Int, height: Int): Square3DApp =
-        start(true, width, height, JmeContext.Type.OffscreenSurface) {}
+    fun openOffscreen(width: Int, height: Int, frameRate: Int = 60): Square3DApp =
+        start(true, width, height, JmeContext.Type.OffscreenSurface) { setFrameRate(frameRate) }
 
     private fun start(offscreen: Boolean, width: Int, height: Int, type: JmeContext.Type, configure: AppSettings.() -> Unit): Square3DApp {
         check(app == null) { "a vista 3D já está aberta" }

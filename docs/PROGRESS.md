@@ -39,6 +39,16 @@
   (`Square3DApp.addShadowsAndSsao`). Conhecido: faixa escura de ~3 px no topo da imagem (borda do SSAO);
   sem light probe, a PBR sai mais escura que o SH3D. O visual final será decidido com o Leonardo.
 
+- 3D integrado (jME offscreen → imagem no Compose): `Home3DPanel` existe mas **não está ligado
+  ao app**, porque a medição em 1080p ficou abaixo da meta (aguardando decisão do Leonardo).
+  Medido em 2026-10-24 (Iris Xe, sombra 3 cascatas + SSAO ligados), `Home3DPanelBenchTest`
+  (rodar com `SQUARE_BENCH=1`):
+  - jME sozinho: 221 fps (cena simples), 122 fps (grade 12x10 = 262 paredes, 120 cômodos);
+  - jME + `readFrameBuffer` a cada frame: ~50 fps nas duas (o custo da leitura é ~15 ms/frame);
+  - pipeline completo (leitura + cópia + `Image` do Skia + desenho no Compose): 12 fps / 1,3 fps,
+    interface travando até 0,7 s, e a RAM da máquina quase esgotou (alocação de 8 MB por frame, memória
+    nativa do Skia que o GC não enxerga). Em duas execuções anteriores isso travou o computador.
+
 ## Paridade com o SH3D (regra para o que vem a seguir)
 
 Quando chegarmos a portas/janelas, rodapés e materiais/texturas por lado, a

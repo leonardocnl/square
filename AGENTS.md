@@ -36,6 +36,8 @@ O **square** é um fork modernizado do **Sweet Home 3D** (versão base 7.5). Seu
    - Proibido "big bang refactoring". Cada mudança deve focar em um único subsistema, ser pequena, conter testes ou passos de verificação automatizados e ser imediatamente reversível via Git.
 5. **Protocolo de Verificação Obrigatório:**
    - Nenhum agente pode dar uma tarefa por concluída sem executar o protocolo de verificação descrito em `docs/VERIFICATION.md` e validar os critérios de aceitação.
+6. **Proibição Absoluta de Emojis:**
+   - É terminantemente proibido o uso de emojis em qualquer situação (código-fonte, comentários, documentação Markdown, mensagens de commit, arquivos de configuração ou respostas ao usuário).
 
 ---
 

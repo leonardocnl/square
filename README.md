@@ -4,7 +4,7 @@
 
 ---
 
-## 🎯 Proposta e Diretrizes Centrais
+## Proposta e Diretrizes Centrais
 
 O Sweet Home 3D consolidou-se como uma das ferramentas open-source mais estáveis e confiáveis para modelagem de plantas baixas e visualização 3D. No entanto, sua interface gráfica reflete convenções do início dos anos 2000 (modais bloqueantes, barras de ferramentas saturadas, ausência de modo escuro e rigidez visual).
 
@@ -16,7 +16,7 @@ O **Square** redefine essa experiência com foco em produtividade moderna, ergon
 
 ---
 
-## 🚀 Recursos e Evolução Visual
+## Recursos e Evolução Visual
 
 | Recurso | Sweet Home 3D Tradicional | Square |
 | :--- | :--- | :--- |
@@ -29,7 +29,7 @@ O **Square** redefine essa experiência com foco em produtividade moderna, ergon
 
 ---
 
-## 🏗️ Arquitetura do Repositório
+## Arquitetura do Repositório
 
 ```text
 square/
@@ -52,7 +52,7 @@ square/
 
 ---
 
-## 🛠️ Como Compilar e Executar
+## Como Compilar e Executar
 
 ### Pré-requisitos
 - **Java Development Kit (JDK):** Versão 25 instalada (`java --version`).
@@ -78,7 +78,7 @@ Valida a integridade do modelo de dados, cálculo de áreas, junção de paredes
 
 ---
 
-## 🗺️ Roadmap de Execução
+## Roadmap de Execução
 
 - [x] **Marco 0:** Fundação, Estabilidade do Build no JDK 25 e Protocolo de Verificação.
 - [x] **Marco 1:** Look & Feel Moderno (FlatLaf), Suporte a Dark Mode e Adaptação da Planta 2D.
@@ -93,6 +93,6 @@ Para detalhes completos de cada fase, consulte [`docs/ROADMAP.md`](docs/ROADMAP.
 
 ---
 
-## 📜 Licença
+## Licença
 
 Distribuído sob a licença **GNU General Public License v2.0** (ou posterior), em conformidade com o Sweet Home 3D. Consulte [`vendor/sh3d/COPYING.TXT`](vendor/sh3d/COPYING.TXT) para os termos completos.

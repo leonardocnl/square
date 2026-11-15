@@ -107,3 +107,4 @@ public class DockOverlayPane extends JLayeredPane {
         return floatingDock.isVisible();
     }
 }
+

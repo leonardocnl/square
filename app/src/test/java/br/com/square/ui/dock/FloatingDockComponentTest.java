@@ -53,3 +53,4 @@ public class FloatingDockComponentTest {
         assertTrue("Dock deve ser reexibível", dock.isVisible());
     }
 }
+

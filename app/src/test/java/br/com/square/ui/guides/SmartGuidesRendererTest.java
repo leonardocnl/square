@@ -48,3 +48,4 @@ public class SmartGuidesRendererTest {
         assertNotNull("Imagem renderizada deve existir", img);
     }
 }
+

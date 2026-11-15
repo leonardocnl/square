@@ -297,3 +297,4 @@ public final class SmartGuidesRenderer {
         return new Rectangle2D.Float(minX, minY, maxX - minX, maxY - minY);
     }
 }
+

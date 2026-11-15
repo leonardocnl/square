@@ -455,6 +455,13 @@ public class HomeController implements Controller {
   }
 
   /**
+   * Returns the undo manager managed by this controller.
+   */
+  public UndoManager getUndoManager() {
+    return this.undoManager;
+  }
+
+  /**
    * Adds listeners that updates the enabled / disabled state of actions.
    */
   private void addListeners() {

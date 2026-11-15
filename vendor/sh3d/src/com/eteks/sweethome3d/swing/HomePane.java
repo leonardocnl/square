@@ -141,6 +141,7 @@ import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -268,6 +269,8 @@ public class HomePane extends JRootPane implements HomeView {
   private JToolBar              classicToolBar;
   private br.com.square.ui.dock.DockOverlayPane dockOverlayPane;
   private br.com.square.ui.inspector.PropertyInspectorPanel propertyInspectorPanel;
+  private br.com.square.ui.history.ActionHistoryPanel actionHistoryPanel;
+  private JTabbedPane           rightSideTabbedPane;
   private JSplitPane            workspaceWithInspector;
 
   /**
@@ -1414,12 +1417,12 @@ public class HomePane extends JRootPane implements HomeView {
     });
     squareMenu.add(toggleClassicBarItem);
 
-    final JCheckBoxMenuItem toggleInspectorItem = new JCheckBoxMenuItem("Inspetor de Propriedades", true);
+    final JCheckBoxMenuItem toggleInspectorItem = new JCheckBoxMenuItem("Painel Lateral (Inspetor / Histórico)", true);
     toggleInspectorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
     toggleInspectorItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if (propertyInspectorPanel != null) {
-          propertyInspectorPanel.setVisible(toggleInspectorItem.isSelected());
+        if (rightSideTabbedPane != null) {
+          rightSideTabbedPane.setVisible(toggleInspectorItem.isSelected());
           if (workspaceWithInspector != null) {
             workspaceWithInspector.resetToPreferredSizes();
           }
@@ -1427,6 +1430,22 @@ public class HomePane extends JRootPane implements HomeView {
       }
     });
     squareMenu.add(toggleInspectorItem);
+
+    final JMenuItem actionHistoryItem = new JMenuItem("Histórico de Ações...");
+    actionHistoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    actionHistoryItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (rightSideTabbedPane != null) {
+          rightSideTabbedPane.setVisible(true);
+          toggleInspectorItem.setSelected(true);
+          rightSideTabbedPane.setSelectedComponent(actionHistoryPanel);
+          if (workspaceWithInspector != null) {
+            workspaceWithInspector.resetToPreferredSizes();
+          }
+        }
+      }
+    });
+    squareMenu.add(actionHistoryItem);
     squareMenu.addSeparator();
 
     final JMenuItem commandPaletteItem = new JMenuItem("Paleta de Comandos...");
@@ -3146,16 +3165,23 @@ public class HomePane extends JRootPane implements HomeView {
     final JComponent planView3DPane = createPlanView3DPane(home, preferences, controller);
 
     this.propertyInspectorPanel = new br.com.square.ui.inspector.PropertyInspectorPanel(home, controller, preferences);
+    this.actionHistoryPanel = new br.com.square.ui.history.ActionHistoryPanel(controller);
+    this.rightSideTabbedPane = new JTabbedPane();
+    this.rightSideTabbedPane.putClientProperty("JTabbedPane.tabHeight", 30);
+    this.rightSideTabbedPane.addTab("Inspetor", this.propertyInspectorPanel);
+    this.rightSideTabbedPane.addTab("Histórico", this.actionHistoryPanel);
+    this.rightSideTabbedPane.setMinimumSize(new Dimension(200, 0));
+
     final JComponent workspaceComponent;
     if (planView3DPane != null) {
-      this.workspaceWithInspector = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, planView3DPane, this.propertyInspectorPanel);
+      this.workspaceWithInspector = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, planView3DPane, this.rightSideTabbedPane);
       this.workspaceWithInspector.setContinuousLayout(true);
       this.workspaceWithInspector.setOneTouchExpandable(true);
       this.workspaceWithInspector.setResizeWeight(1.0);
       this.workspaceWithInspector.setBorder(null);
       workspaceComponent = this.workspaceWithInspector;
     } else {
-      workspaceComponent = this.propertyInspectorPanel;
+      workspaceComponent = this.rightSideTabbedPane;
     }
 
     if (catalogFurniturePane == null) {

@@ -126,8 +126,8 @@ flowchart LR
 
 **Objetivo:** Assegurar preservação total do trabalho do usuário com salvamento contínuo em segundo plano e histórico visual de undo/redo.
 
-- [ ] Refatorar o `AutoRecoveryManager` para operar com snapshots imutáveis do modelo de dados (`Home`), gravando o estado em thread de background (I/O) sem interferir na taxa de quadros da UI.
-- [ ] Implementar histórico visual de ações (`ActionHistoryPanel`), permitindo que o usuário visualize a lista de passos executados e retroceda para qualquer ponto anterior com um clique.
+- [x] Refatorar o `AutoRecoveryManager` para operar com snapshots imutáveis do modelo de dados (`Home`), gravando o estado em thread de background (I/O) sem interferir na taxa de quadros da UI.
+- [x] Implementar histórico visual de ações (`ActionHistoryPanel`), permitindo que o usuário visualize a lista de passos executados e retroceda para qualquer ponto anterior com um clique.
 
 **Critério de Aceite:**
 - O salvamento em background ocorre silenciosamente sem engasgos ou quedas de FPS no desenho ou rotação 3D.

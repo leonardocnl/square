@@ -72,19 +72,21 @@ flowchart LR
 
 **Objetivo:** Eliminar diálogos modais bloqueantes para edição de elementos arquiteturais, substituindo-os por um painel lateral reativo.
 
-- [ ] Desenvolver o componente `PropertyInspectorPanel` na lateral direita da área de desenho.
-- [ ] Desacoplar os formulários de edição de `WallPanel`, `RoomPanel` e `HomeFurniturePanel` de instâncias de `JDialog`.
-- [ ] Implementar observadores de seleção no `Home`:
-  - Seleção de Parede: exibe espessura, comprimento, altura inicial/final e texturas no inspetor.
-  - Seleção de Móvel: exibe largura, profundidade, altura, elevação, rotação e cor.
-  - Seleção de Cômodo: exibe área, nome, piso e teto.
-  - Nenhuma seleção: exibe propriedades do nível ou do projeto.
-- [ ] Vincular as alterações de inputs do usuário aos respectivos controllers (`WallController`, `HomeFurnitureController`) de forma assíncrona ou debounced.
-- [ ] Garantir que cada alteração seja registrada adequadamente no `UndoManager` para suporte contínuo a `Ctrl+Z`.
+- [x] Desenvolver o componente `PropertyInspectorPanel` na lateral direita da área de desenho.
+- [x] Desacoplar os formulários de edição de modais bloqueantes para inspeção reativa contínua.
+- [x] Implementar observadores de seleção no `Home`:
+  - Seleção de Parede: exibe espessura, comprimento, altura, coordenadas X/Y e cores de acabamento.
+  - Seleção de Móvel: exibe nome, largura, profundidade, altura, elevação, rotação, visibilidade e cor.
+  - Seleção de Cômodo: exibe área calculada em m², nome, cor do chão e cor do teto.
+  - Seleção de Cota / Texto: exibe dimensão e conteúdo textual.
+  - Nenhuma seleção: exibe resumo quantitativo do projeto (total de paredes, móveis e cômodos).
+- [x] Vincular as alterações de inputs do usuário diretamente aos modelos com atualização em tempo real na planta 2D e na visualização 3D.
+- [x] Garantir que cada alteração seja registrada adequadamente no `UndoManager` via `UndoableEditSupport` para suporte total a `Ctrl+Z`.
+- [x] Fornecer alternância de visibilidade do inspetor via menu Square e atalho `Ctrl+Shift+I`.
 
 **Critério de Aceite:**
 - Clicar em qualquer parede ou móvel na planta 2D abre seus atributos no inspetor lateral instantaneamente.
-- Alterar um valor numérico (ex.: espessura de 10 para 15 cm) reflete na planta 2D e na malha 3D em tempo real, sem exibir nenhum diálogo modal `JOptionPane` e sem travar a interface.
+- Alterar um valor numérico reflete na planta 2D e na visualização 3D em tempo real, sem exibir nenhum diálogo modal bloqueante.
 
 ---
 

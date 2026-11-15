@@ -267,6 +267,8 @@ public class HomePane extends JRootPane implements HomeView {
   private List<Action>          pluginActions;
   private JToolBar              classicToolBar;
   private br.com.square.ui.dock.DockOverlayPane dockOverlayPane;
+  private br.com.square.ui.inspector.PropertyInspectorPanel propertyInspectorPanel;
+  private JSplitPane            workspaceWithInspector;
 
   /**
    * Creates home view associated with its controller.
@@ -1394,6 +1396,20 @@ public class HomePane extends JRootPane implements HomeView {
       }
     });
     squareMenu.add(toggleClassicBarItem);
+
+    final JCheckBoxMenuItem toggleInspectorItem = new JCheckBoxMenuItem("Inspetor de Propriedades", true);
+    toggleInspectorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    toggleInspectorItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (propertyInspectorPanel != null) {
+          propertyInspectorPanel.setVisible(toggleInspectorItem.isSelected());
+          if (workspaceWithInspector != null) {
+            workspaceWithInspector.resetToPreferredSizes();
+          }
+        }
+      }
+    });
+    squareMenu.add(toggleInspectorItem);
 
     menuBar.add(squareMenu);
 
@@ -3102,15 +3118,28 @@ public class HomePane extends JRootPane implements HomeView {
     final JComponent catalogFurniturePane = createCatalogFurniturePane(home, preferences, controller);
     final JComponent planView3DPane = createPlanView3DPane(home, preferences, controller);
 
+    this.propertyInspectorPanel = new br.com.square.ui.inspector.PropertyInspectorPanel(home, controller, preferences);
+    final JComponent workspaceComponent;
+    if (planView3DPane != null) {
+      this.workspaceWithInspector = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, planView3DPane, this.propertyInspectorPanel);
+      this.workspaceWithInspector.setContinuousLayout(true);
+      this.workspaceWithInspector.setOneTouchExpandable(true);
+      this.workspaceWithInspector.setResizeWeight(1.0);
+      this.workspaceWithInspector.setBorder(null);
+      workspaceComponent = this.workspaceWithInspector;
+    } else {
+      workspaceComponent = this.propertyInspectorPanel;
+    }
+
     if (catalogFurniturePane == null) {
-      return planView3DPane;
+      return workspaceComponent;
     } else if (planView3DPane == null) {
       return catalogFurniturePane;
     } else {
       boolean leftToRightOrientation = ComponentOrientation.getOrientation(Locale.getDefault()).isLeftToRight();
       final JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-          leftToRightOrientation ? catalogFurniturePane  : planView3DPane,
-          leftToRightOrientation ? planView3DPane  : catalogFurniturePane);
+          leftToRightOrientation ? catalogFurniturePane : workspaceComponent,
+          leftToRightOrientation ? workspaceComponent : catalogFurniturePane);
       // Set default divider location
       mainPane.setDividerLocation((int)((leftToRightOrientation ? 360 : 670) * SwingTools.getResolutionScale()));
       configureSplitPane(mainPane, home, MAIN_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY,
@@ -3121,10 +3150,10 @@ public class HomePane extends JRootPane implements HomeView {
             if (mainPane.getComponentOrientation().isLeftToRight()) {
               mainPane.setRightComponent(null); // Needed to avoid twice the same child component
               mainPane.setLeftComponent(catalogFurniturePane);
-              mainPane.setRightComponent(planView3DPane);
+              mainPane.setRightComponent(workspaceComponent);
             } else {
               mainPane.setRightComponent(null);
-              mainPane.setLeftComponent(planView3DPane);
+              mainPane.setLeftComponent(workspaceComponent);
               mainPane.setRightComponent(catalogFurniturePane);
             }
             if (mainPane.isShowing()) {

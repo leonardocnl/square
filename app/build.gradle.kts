@@ -55,6 +55,8 @@ dependencies {
     // JNLP runtime e compile stubs
     implementation(files(File(sh3dLibTest, "jnlp.jar")))
     compileOnly(files(File(sh3dLibTest, "AppleJavaExtensions.jar")))
+
+    testImplementation("junit:junit:4.13.2")
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -84,4 +86,8 @@ tasks.named<JavaExec>("run") {
         "--add-exports=java.desktop/sun.java2d.opengl=ALL-UNNAMED",
         "-Xmx1024m"
     )
+}
+
+tasks.withType<Test>().configureEach {
+    systemProperty("java.awt.headless", "true")
 }

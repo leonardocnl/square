@@ -265,6 +265,8 @@ public class HomePane extends JRootPane implements HomeView {
   private boolean               exportAllToOBJ = true;
   private ActionMap             menuActionMap;
   private List<Action>          pluginActions;
+  private JToolBar              classicToolBar;
+  private br.com.square.ui.dock.DockOverlayPane dockOverlayPane;
 
   /**
    * Creates home view associated with its controller.
@@ -297,8 +299,16 @@ public class HomePane extends JRootPane implements HomeView {
     setJMenuBar(homeMenuBar);
     addHomeListeners(home, controller);
     Container contentPane = getContentPane();
-    contentPane.add(createToolBar(home, preferences), BorderLayout.NORTH);
-    contentPane.add(createMainPane(home, preferences, controller));
+    this.classicToolBar = createToolBar(home, preferences);
+    // Por padrão a barra fixa tradicional fica oculta, liberando espaço vertical para o canvas
+    this.classicToolBar.setVisible(false);
+    contentPane.add(this.classicToolBar, BorderLayout.NORTH);
+
+    JComponent mainPane = createMainPane(home, preferences, controller);
+    br.com.square.ui.dock.FloatingDockComponent floatingDock =
+        new br.com.square.ui.dock.FloatingDockComponent(getActionMap());
+    this.dockOverlayPane = new br.com.square.ui.dock.DockOverlayPane(mainPane, floatingDock);
+    contentPane.add(this.dockOverlayPane, BorderLayout.CENTER);
     if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
       // Under Mac OS X 10.5, add some dummy labels at left and right borders
       // to avoid the tool bar to be attached on these borders
@@ -1359,6 +1369,32 @@ public class HomePane extends JRootPane implements HomeView {
       }
     });
     squareMenu.add(toggleThemeItem);
+    squareMenu.addSeparator();
+
+    final JCheckBoxMenuItem toggleDockItem = new JCheckBoxMenuItem("Dock Flutuante (Figma)", true);
+    toggleDockItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    toggleDockItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (dockOverlayPane != null) {
+          dockOverlayPane.setDockVisible(toggleDockItem.isSelected());
+        }
+      }
+    });
+    squareMenu.add(toggleDockItem);
+
+    final JCheckBoxMenuItem toggleClassicBarItem = new JCheckBoxMenuItem("Barra de Ferramentas Clássica", false);
+    toggleClassicBarItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    toggleClassicBarItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (classicToolBar != null) {
+          classicToolBar.setVisible(toggleClassicBarItem.isSelected());
+          getContentPane().revalidate();
+          getContentPane().repaint();
+        }
+      }
+    });
+    squareMenu.add(toggleClassicBarItem);
+
     menuBar.add(squareMenu);
 
     menuBar.add(helpMenu);

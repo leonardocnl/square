@@ -54,16 +54,16 @@ flowchart LR
 
 **Objetivo:** Desacoplar a barra de ferramentas superior fixa, liberando espaço vertical e adotando um dock flutuante ergonômico sobreposto ao canvas.
 
-- [ ] Implementar o componente `FloatingDockComponent` em Swing com bordas arredondadas, fundo translúcido e sombra suave.
-- [ ] Posicionar o dock na parte superior central da área de trabalho utilizando `JLayeredPane`.
-- [ ] Conectar os botões do dock diretamente às ações existentes no `HomeController` (`ActionType.SELECT`, `CREATE_WALLS`, `CREATE_ROOMS`, etc.).
-- [ ] Organizar os botões em grupos visuais coesos (Seleção/Navegação, Criação Arquitetural, Elementos Auxiliares e Modos 3D).
-- [ ] Adicionar microinterações visuais de hover, estado ativo e tooltips elegantes.
-- [ ] Remover a antiga `JToolBar` fixa de `BorderLayout.NORTH` em `HomePane.java`.
+- [x] Implementar o componente `FloatingDockComponent` em Swing com bordas arredondadas, fundo translúcido e sombra suave.
+- [x] Posicionar o dock na parte superior central da área de trabalho utilizando `JLayeredPane` (`DockOverlayPane`).
+- [x] Conectar os botões do dock diretamente às ações existentes no `HomeController` (`ActionType.SELECT`, `CREATE_WALLS`, `CREATE_ROOMS`, etc.).
+- [x] Organizar os botões em grupos visuais coesos (Seleção/Navegação, Criação Arquitetural, Elementos Auxiliares e Modos 3D).
+- [x] Adicionar microinterações visuais de hover, estado ativo, cantos arredondados e suporte dinâmico a drag/movimentação.
+- [x] Ocultar a antiga barra de ferramentas fixa de `BorderLayout.NORTH` por padrão, mantendo alternância via menu Square (`Ctrl+Shift+B` e `Ctrl+Shift+F`).
 
 **Critério de Aceite:**
-- A barra cinza estática superior é eliminada.
-- O dock flutua sobre o topo da área central, permitindo que a área da planta ganhe espaço vertical.
+- A barra cinza estática superior é eliminada por padrão, ganhando espaço vertical significativo na planta e na visualização 3D.
+- O dock flutua sobre o topo da área central, com suporte a arraste e resposta dinâmica a mudanças de tema claro/escuro.
 - 100% das ferramentas anteriores continuam funcionais e com estados selecionados sincronizados.
 
 ---

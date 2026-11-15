@@ -847,3 +847,4 @@ public class PropertyInspectorPanel extends JPanel {
         void accept(Integer rgb);
     }
 }
+

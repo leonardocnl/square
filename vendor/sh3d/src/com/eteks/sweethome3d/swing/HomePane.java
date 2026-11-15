@@ -320,9 +320,26 @@ public class HomePane extends JRootPane implements HomeView {
       contentPane.add(new JLabel(), BorderLayout.EAST);
     }
 
+    int shortcutMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    registerKeyboardAction(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        openCommandPalette();
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_K, shortcutMask), WHEN_IN_FOCUSED_WINDOW);
+
     disableMenuItemsDuringDragAndDrop(controller.getPlanController().getView(), homeMenuBar);
     // Change component orientation
     applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+  }
+
+  /**
+   * Abre a paleta de comandos universal (Ctrl+K).
+   */
+  public void openCommandPalette() {
+    Window window = SwingUtilities.getWindowAncestor(this);
+    br.com.square.ui.palette.CommandPaletteDialog dialog =
+        new br.com.square.ui.palette.CommandPaletteDialog(window, this.home, this.controller, this.preferences, getActionMap());
+    dialog.setVisible(true);
   }
 
   /**
@@ -1410,6 +1427,16 @@ public class HomePane extends JRootPane implements HomeView {
       }
     });
     squareMenu.add(toggleInspectorItem);
+    squareMenu.addSeparator();
+
+    final JMenuItem commandPaletteItem = new JMenuItem("Paleta de Comandos...");
+    commandPaletteItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, shortcutMask));
+    commandPaletteItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        openCommandPalette();
+      }
+    });
+    squareMenu.add(commandPaletteItem);
 
     menuBar.add(squareMenu);
 

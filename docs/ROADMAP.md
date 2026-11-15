@@ -94,15 +94,16 @@ flowchart LR
 
 **Objetivo:** Permitir busca e inserção rápida de móveis e execução de ferramentas diretamente pelo teclado.
 
-- [ ] Criar o componente visual da paleta de comandos (`CommandPaletteDialog` flutuante e centralizado).
-- [ ] Registrar atalho global de teclado `Ctrl+K` (e `Cmd+K` no macOS) em toda a aplicação.
-- [ ] Indexar em memória as peças do `FurnitureCatalog` e as ações do `HomeController`.
-- [ ] Implementar busca incremental com filtragem rápida por palavras-chave e categorias.
-- [ ] Ao selecionar um móvel na busca, colocá-lo no modo de inserção ou no centro da visualização da planta.
+- [x] Criar o componente visual da paleta de comandos (`CommandPaletteDialog` flutuante e centralizado).
+- [x] Registrar atalho global de teclado `Ctrl+K` (e `Cmd+K` no macOS) em toda a aplicação.
+- [x] Indexar em memória as peças do `FurnitureCatalog` e as ações do `HomeController` (`CommandPaletteModel`).
+- [x] Implementar busca incremental com filtragem rápida por palavras-chave e categorias.
+- [x] Ao selecionar um móvel na busca, adicioná-lo diretamente à planta no centro da visão.
+- [x] Ao selecionar uma ferramenta ou comando, executá-la imediatamente e fechar a paleta.
 
 **Critério de Aceite:**
-- Pressionar `Ctrl+K` abre o campo de busca em menos de 100 ms.
-- Digitar termos como "cadeira", "porta" ou "salvar" exibe os resultados filtrados instantaneamente. Pressionar `Enter` ativa a ferramenta ou insere o móvel selecionado.
+- Pressionar `Ctrl+K` abre o campo de busca em menos de 100 ms com campo de texto focado.
+- Digitar termos como "cadeira", "porta", "parede" ou "salvar" exibe os resultados filtrados instantaneamente. Pressionar `Enter` ativa a ferramenta ou insere o móvel selecionado.
 
 ---
 

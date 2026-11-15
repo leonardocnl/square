@@ -84,7 +84,7 @@ Valida a integridade do modelo de dados, cálculo de áreas, junção de paredes
 - [x] **Marco 1:** Look & Feel Moderno (FlatLaf), Suporte a Dark Mode e Adaptação da Planta 2D.
 - [x] **Marco 2:** Dock Flutuante de Ferramentas (Estilo Figma) sobreposto ao canvas.
 - [x] **Marco 3:** Inspetores de Propriedades em Tempo Real (eliminação de modais bloqueantes).
-- [ ] **Marco 4:** Paleta de Comandos Universal (`Ctrl+K`).
+- [x] **Marco 4:** Paleta de Comandos Universal (`Ctrl+K`).
 - [ ] **Marco 5:** Guias Inteligentes e Réguas Dinâmicas de Distância na Planta 2D.
 - [ ] **Marco 6:** Salvamento Contínuo e Histórico de Undo/Redo Granular.
 - [ ] **Marco 7:** Motor de Renderização 3D em Tempo Real Modernizado.

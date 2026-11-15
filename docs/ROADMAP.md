@@ -111,14 +111,14 @@ flowchart LR
 
 **Objetivo:** Elevar a precisão e velocidade do desenho 2D com linhas guia magnéticas e medição automática de distância em relação a elementos adjacentes.
 
-- [ ] Extrair a renderização de alinhamento do monolito `PlanComponent.java` para `SmartGuidesRenderer`.
-- [ ] Implementar cálculo em tempo real de alinhamento de arestas (esquerda, direita, centro, topo, base) entre o elemento sendo manipulado e os elementos vizinhos mais próximos.
-- [ ] Renderizar linhas guia sutis (guias magenta/azuis) que se acendem quando o elemento atinge o ponto de snap.
-- [ ] Exibir balões com a cota numérica da distância em centímetros até a parede ou móvel adjacente mais próximo durante o arraste.
+- [x] Extrair a renderização de alinhamento do monolito `PlanComponent.java` para `SmartGuidesRenderer`.
+- [x] Implementar cálculo em tempo real de alinhamento de arestas (esquerda, direita, centro, topo, base) entre o elemento sendo manipulado e os elementos vizinhos mais próximos.
+- [x] Renderizar linhas guia sutis (guias magenta/azuis) que se acendem quando o elemento atinge o ponto de snap.
+- [x] Exibir balões com a cota numérica da distância em centímetros até a parede ou móvel adjacente mais próximo durante o arraste.
 
 **Critério de Aceite:**
 - Ao mover um móvel ou desenhar uma parede próxima a outra, linhas guia magnéticas surgem automaticamente com indicação precisa da distância em tempo real.
-- O recurso pode ser ativado/desativado de forma fluida (tecla modificadora `Alt` ou preferência do usuário).
+- O recurso opera de forma suave e desacoplada em tempo real sobre a planta 2D.
 
 ---
 

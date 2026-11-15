@@ -129,3 +129,4 @@ public class CommandPaletteModel {
         return nfd.replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT);
     }
 }
+

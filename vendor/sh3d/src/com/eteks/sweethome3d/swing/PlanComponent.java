@@ -3003,6 +3003,7 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
             foregroundColor, furnitureOutlineColor, paintMode, false);
         paintFurnitureOutline(g2D, this.draggedItemsFeedback, level, selectionOutlinePaint, selectionOutlineStroke, null,
             planScale, foregroundColor);
+        br.com.square.ui.guides.SmartGuidesRenderer.paintGuides(g2D, this.home, this.draggedItemsFeedback, planScale);
       }
 
       paintRectangleFeedback(g2D, selectionColor, planScale);

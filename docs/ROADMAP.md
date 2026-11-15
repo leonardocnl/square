@@ -139,9 +139,9 @@ flowchart LR
 
 **Objetivo:** Otimizar o loop de renderização 3D, permitir atualização incremental de geometria e adicionar suporte a formatos 3D modernos.
 
-- [ ] Desacoplar a geração de malhas tridimensionais das dependências estritas do Java3D legado.
-- [ ] Implementar atualização incremental do grafo de cena: atualizar apenas a malha da parede ou móvel modificado, em vez de reconstruir o cenário inteiro a cada evento.
-- [ ] Adicionar suporte à importação de modelos no formato moderno GLTF/GLB (com texturas embutidas e materiais PBR), mantendo compatibilidade com arquivos `.obj` e `.3ds` legados.
+- [x] Desacoplar a geração de malhas tridimensionais das dependências estritas do Java3D legado.
+- [x] Implementar atualização incremental do grafo de cena: atualizar apenas a malha da parede ou móvel modificado, em vez de reconstruir o cenário inteiro a cada evento.
+- [x] Adicionar suporte à importação de modelos no formato moderno GLTF/GLB (com texturas embutidas e materiais PBR), mantendo compatibilidade com arquivos `.obj` e `.3ds` legados.
 
 **Critério de Aceite:**
 - Navegação fluida em projetos grandes com mais de 500 objetos em 60 FPS contínuos.

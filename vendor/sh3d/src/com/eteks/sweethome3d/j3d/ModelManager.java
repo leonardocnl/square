@@ -922,7 +922,8 @@ public class ModelManager {
     Loader []  defaultLoaders = new Loader [] {new OBJLoader(),
                                                new DAELoader(),
                                                new Max3DSLoader(),
-                                               new Lw3dLoader()};
+                                               new Lw3dLoader(),
+                                               new br.com.square.io.gltf.GltfLoader()};
     Loader [] loaders = new Loader [defaultLoaders.length + this.additionalLoaderClasses.length];
     System.arraycopy(defaultLoaders, 0, loaders, 0, defaultLoaders.length);
     for (int i = 0; i < this.additionalLoaderClasses.length; i++) {

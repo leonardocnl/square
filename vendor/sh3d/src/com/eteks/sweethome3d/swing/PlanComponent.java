@@ -4419,10 +4419,15 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
   private void paintPieceOfFurnitureIcon(Graphics2D g2D, HomePieceOfFurniture piece,
                                          Shape pieceShape2D, float planScale,
                                          Color backgroundColor, PaintMode paintMode) {
-    // Get piece icon
-    Icon icon = IconManager.getInstance().getIcon(piece.getIcon(), 128,
-        paintMode == PaintMode.PAINT ? this : null);
-    paintPieceOfFurnitureIcon(g2D, piece, icon, pieceShape2D, planScale, backgroundColor);
+    if (piece.getPlanIcon() != null) {
+      Icon icon = IconManager.getInstance().getIcon(piece.getPlanIcon(), 128,
+          paintMode == PaintMode.PAINT ? this : null);
+      paintPieceOfFurnitureIcon(g2D, piece, icon, pieceShape2D, planScale, backgroundColor);
+    } else {
+      // Desenha apenas a silhueta superior pura (sem imagem 3D em perspectiva)
+      g2D.setPaint(backgroundColor);
+      g2D.fill(pieceShape2D);
+    }
   }
 
   /**
@@ -4434,31 +4439,35 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
     g2D.setPaint(backgroundColor);
     g2D.fill(pieceShape2D);
 
-    Shape previousClip = g2D.getClip();
-    // Clip icon drawing into piece shape
-    g2D.clip(pieceShape2D);
-    AffineTransform previousTransform = g2D.getTransform();
-    // Translate to piece center
-    final Rectangle2D bounds = pieceShape2D.getBounds2D();
-    g2D.translate(bounds.getCenterX(), bounds.getCenterY());
-    float pieceDepth = piece.getDepthInPlan();
-    if (piece instanceof HomeDoorOrWindow) {
-      pieceDepth *= ((HomeDoorOrWindow)piece).getWallThickness();
+    if (piece.getPlanIcon() != null && icon != null
+        && !IconManager.getInstance().isWaitIcon(icon)
+        && !IconManager.getInstance().isErrorIcon(icon)) {
+      Shape previousClip = g2D.getClip();
+      // Clip icon drawing into piece shape
+      g2D.clip(pieceShape2D);
+      AffineTransform previousTransform = g2D.getTransform();
+      // Translate to piece center
+      final Rectangle2D bounds = pieceShape2D.getBounds2D();
+      g2D.translate(bounds.getCenterX(), bounds.getCenterY());
+      float pieceDepth = piece.getDepthInPlan();
+      if (piece instanceof HomeDoorOrWindow) {
+        pieceDepth *= ((HomeDoorOrWindow)piece).getWallThickness();
+      }
+      // Scale icon to fit in its area
+      float minDimension = Math.min(piece.getWidthInPlan(), pieceDepth);
+      float iconScale = Math.min(1 / planScale, minDimension / icon.getIconHeight());
+      // If piece model is mirrored, inverse x scale
+      if (piece.isModelMirrored()) {
+        g2D.scale(-iconScale, iconScale);
+      } else {
+        g2D.scale(iconScale, iconScale);
+      }
+      // Paint piece icon
+      icon.paintIcon(this, g2D, -icon.getIconWidth() / 2, -icon.getIconHeight() / 2);
+      // Revert g2D transformation to previous value
+      g2D.setTransform(previousTransform);
+      g2D.setClip(previousClip);
     }
-    // Scale icon to fit in its area
-    float minDimension = Math.min(piece.getWidthInPlan(), pieceDepth);
-    float iconScale = Math.min(1 / planScale, minDimension / icon.getIconHeight());
-    // If piece model is mirrored, inverse x scale
-    if (piece.isModelMirrored()) {
-      g2D.scale(-iconScale, iconScale);
-    } else {
-      g2D.scale(iconScale, iconScale);
-    }
-    // Paint piece icon
-    icon.paintIcon(this, g2D, -icon.getIconWidth() / 2, -icon.getIconHeight() / 2);
-    // Revert g2D transformation to previous value
-    g2D.setTransform(previousTransform);
-    g2D.setClip(previousClip);
   }
 
   /**

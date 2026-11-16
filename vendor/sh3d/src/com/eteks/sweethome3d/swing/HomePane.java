@@ -310,10 +310,7 @@ public class HomePane extends JRootPane implements HomeView {
     contentPane.add(this.classicToolBar, BorderLayout.NORTH);
 
     JComponent mainPane = createMainPane(home, preferences, controller);
-    br.com.square.ui.dock.FloatingDockComponent floatingDock =
-        new br.com.square.ui.dock.FloatingDockComponent(getActionMap());
-    this.dockOverlayPane = new br.com.square.ui.dock.DockOverlayPane(mainPane, floatingDock);
-    contentPane.add(this.dockOverlayPane, BorderLayout.CENTER);
+    contentPane.add(mainPane, BorderLayout.CENTER);
     if (OperatingSystem.isMacOSXLeopardOrSuperior()) {
       // Under Mac OS X 10.5, add some dummy labels at left and right borders
       // to avoid the tool bar to be attached on these borders
@@ -3695,11 +3692,21 @@ public class HomePane extends JRootPane implements HomeView {
         view3D = SwingTools.createScrollPane(view3D);
       }
 
+      final JComponent planComponentForSplit;
+      if (planView != null) {
+        br.com.square.ui.dock.FloatingDockComponent floatingDock =
+            new br.com.square.ui.dock.FloatingDockComponent(getActionMap());
+        this.dockOverlayPane = new br.com.square.ui.dock.DockOverlayPane(planView, floatingDock);
+        planComponentForSplit = this.dockOverlayPane;
+      } else {
+        planComponentForSplit = null;
+      }
+
       final JComponent planView3DPane;
       boolean detachedView3D = Boolean.parseBoolean(home.getProperty(view3D.getClass().getName() + DETACHED_VIEW_VISUAL_PROPERTY));
-      if (planView != null) {
+      if (planComponentForSplit != null) {
         // Create a split pane that displays both components
-        final JSplitPane planView3DSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, planView, view3D);
+        final JSplitPane planView3DSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, planComponentForSplit, view3D);
         planView3DSplitPane.setMinimumSize(new Dimension());
         configureSplitPane((JSplitPane)planView3DSplitPane, home,
             PLAN_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY, 0.5, false, controller);
@@ -3775,7 +3782,13 @@ public class HomePane extends JRootPane implements HomeView {
 
       return planView3DPane;
     } else {
-      return planView;
+      if (planView != null) {
+        br.com.square.ui.dock.FloatingDockComponent floatingDock =
+            new br.com.square.ui.dock.FloatingDockComponent(getActionMap());
+        this.dockOverlayPane = new br.com.square.ui.dock.DockOverlayPane(planView, floatingDock);
+        return this.dockOverlayPane;
+      }
+      return null;
     }
   }
 

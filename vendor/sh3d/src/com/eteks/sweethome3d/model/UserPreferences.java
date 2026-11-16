@@ -111,7 +111,7 @@ public abstract class UserPreferences {
   private boolean          gridVisible         = true;
   private String           defaultFontName;
   private boolean          drawingModeEnabled;
-  private boolean          furnitureViewedFromTop;
+  private boolean          furnitureViewedFromTop = true;
   private int              furnitureModelIconSize = 128;
   private boolean          roomFloorColoredOrTextured;
   private TextureImage     wallPattern;

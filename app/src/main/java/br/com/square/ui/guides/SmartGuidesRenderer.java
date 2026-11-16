@@ -47,10 +47,124 @@ public final class SmartGuidesRenderer {
     }
 
     /**
+     * Resultado do calculo de atracao magnetica de guias inteligentes.
+     */
+    public static class SnapResult {
+        private final float deltaX;
+        private final float deltaY;
+        private final boolean snappedX;
+        private final boolean snappedY;
+
+        public SnapResult(float deltaX, float deltaY, boolean snappedX, boolean snappedY) {
+            this.deltaX = deltaX;
+            this.deltaY = deltaY;
+            this.snappedX = snappedX;
+            this.snappedY = snappedY;
+        }
+
+        public float getDeltaX() {
+            return deltaX;
+        }
+
+        public float getDeltaY() {
+            return deltaY;
+        }
+
+        public boolean isSnappedX() {
+            return snappedX;
+        }
+
+        public boolean isSnappedY() {
+            return snappedY;
+        }
+    }
+
+    /**
+     * Calcula o deslocamento de atracao magnetica (snap) entre os itens ativos e elementos vizinhos (moveis e paredes).
+     * Retorna o SnapResult com deltaX e deltaY necessarios para alinhar arestas ou centros.
+     */
+    public static SnapResult computeSnap(Home home, List<? extends Selectable> activeItems, float thresholdCm) {
+        if (home == null || activeItems == null || activeItems.isEmpty() || thresholdCm <= 0) {
+            return new SnapResult(0f, 0f, false, false);
+        }
+
+        Rectangle2D activeBounds = computeItemsBounds(activeItems);
+        if (activeBounds == null) {
+            return new SnapResult(0f, 0f, false, false);
+        }
+
+        List<Rectangle2D> neighborBounds = collectNeighborBounds(home, activeItems);
+        if (neighborBounds.isEmpty()) {
+            return new SnapResult(0f, 0f, false, false);
+        }
+
+        float activeMinX = (float) activeBounds.getMinX();
+        float activeCenterX = (float) activeBounds.getCenterX();
+        float activeMaxX = (float) activeBounds.getMaxX();
+
+        float activeMinY = (float) activeBounds.getMinY();
+        float activeCenterY = (float) activeBounds.getCenterY();
+        float activeMaxY = (float) activeBounds.getMaxY();
+
+        float bestDeltaX = 0f;
+        float minAbsDiffX = thresholdCm + 0.001f;
+        boolean snappedX = false;
+
+        float bestDeltaY = 0f;
+        float minAbsDiffY = thresholdCm + 0.001f;
+        boolean snappedY = false;
+
+        for (Rectangle2D neighbor : neighborBounds) {
+            float nMinX = (float) neighbor.getMinX();
+            float nCenterX = (float) neighbor.getCenterX();
+            float nMaxX = (float) neighbor.getMaxX();
+
+            // Testar alinhamentos verticais no eixo X (min, center, max)
+            float d = nMinX - activeMinX;
+            if (Math.abs(d) < minAbsDiffX) { minAbsDiffX = Math.abs(d); bestDeltaX = d; snappedX = true; }
+            d = nCenterX - activeCenterX;
+            if (Math.abs(d) < minAbsDiffX) { minAbsDiffX = Math.abs(d); bestDeltaX = d; snappedX = true; }
+            d = nMaxX - activeMaxX;
+            if (Math.abs(d) < minAbsDiffX) { minAbsDiffX = Math.abs(d); bestDeltaX = d; snappedX = true; }
+            d = nMaxX - activeMinX;
+            if (Math.abs(d) < minAbsDiffX) { minAbsDiffX = Math.abs(d); bestDeltaX = d; snappedX = true; }
+            d = nMinX - activeMaxX;
+            if (Math.abs(d) < minAbsDiffX) { minAbsDiffX = Math.abs(d); bestDeltaX = d; snappedX = true; }
+
+            // Testar alinhamentos horizontais no eixo Y (min, center, max)
+            float nMinY = (float) neighbor.getMinY();
+            float nCenterY = (float) neighbor.getCenterY();
+            float nMaxY = (float) neighbor.getMaxY();
+
+            d = nMinY - activeMinY;
+            if (Math.abs(d) < minAbsDiffY) { minAbsDiffY = Math.abs(d); bestDeltaY = d; snappedY = true; }
+            d = nCenterY - activeCenterY;
+            if (Math.abs(d) < minAbsDiffY) { minAbsDiffY = Math.abs(d); bestDeltaY = d; snappedY = true; }
+            d = nMaxY - activeMaxY;
+            if (Math.abs(d) < minAbsDiffY) { minAbsDiffY = Math.abs(d); bestDeltaY = d; snappedY = true; }
+            d = nMaxY - activeMinY;
+            if (Math.abs(d) < minAbsDiffY) { minAbsDiffY = Math.abs(d); bestDeltaY = d; snappedY = true; }
+            d = nMinY - activeMaxY;
+            if (Math.abs(d) < minAbsDiffY) { minAbsDiffY = Math.abs(d); bestDeltaY = d; snappedY = true; }
+        }
+
+        return new SnapResult(bestDeltaX, bestDeltaY, snappedX, snappedY);
+    }
+
+    /**
      * Pinta as linhas guias de alinhamento e cotas dinamicas de distancia sobre a planta 2D.
      */
     public static void paintGuides(Graphics2D g2D, Home home, List<? extends Selectable> activeItems, float planScale) {
-        if (home == null || activeItems == null || activeItems.isEmpty() || planScale <= 0) {
+        paintGuides(g2D, home, activeItems, planScale, true);
+    }
+
+    /**
+     * Pinta as linhas guias de alinhamento e cotas dinamicas de distancia sobre a planta 2D,
+     * respeitando se o magnetismo esta ativo.
+     */
+    public static void paintGuides(Graphics2D g2D, Home home, List<? extends Selectable> activeItems,
+                                   float planScale, boolean magnetismActive) {
+        if (!magnetismActive || home == null || activeItems == null || activeItems.isEmpty() || planScale <= 0) {
             return;
         }
 

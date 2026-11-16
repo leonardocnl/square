@@ -1735,11 +1735,9 @@ public class HomeComponent3D extends JComponent implements View3D, Printable {
                 boolean duplicationActivated = OperatingSystem.isMacOSX()
                     ? ev.isAltDown()
                     : ev.isControlDown();
-                boolean magnetismToggled = OperatingSystem.isWindows()
-                    ? ev.isAltDown()
-                    : (OperatingSystem.isMacOSX()
-                           ? ev.isMetaDown()
-                           : ev.isShiftDown() && ev.isAltDown());
+                boolean magnetismToggled = OperatingSystem.isMacOSX()
+                    ? (ev.isAltDown() || ev.isMetaDown())
+                    : ev.isAltDown();
                 controller.pressMouse(ev.getX(), ev.getY(),
                     ev.getClickCount(), ev.isShiftDown() && !ev.isControlDown() && !ev.isAltDown() && !ev.isMetaDown(),
                     alignmentActivated, duplicationActivated, magnetismToggled, null);
@@ -2046,7 +2044,9 @@ public class HomeComponent3D extends JComponent implements View3D, Printable {
       inputMap.put(KeyStroke.getKeyStroke("shift alt released META"), ActionType.TOGGLE_MAGNETISM_OFF);
       inputMap.put(KeyStroke.getKeyStroke("meta ESCAPE"), ActionType.ESCAPE);
     } else {
-      // Under other Unix systems, magnetism toggled with Alt + Shift key
+      // Under other Unix systems, magnetism toggled with Alt key (and legacy Alt + Shift)
+      inputMap.put(KeyStroke.getKeyStroke("alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
+      inputMap.put(KeyStroke.getKeyStroke("released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
       inputMap.put(KeyStroke.getKeyStroke("shift alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
       inputMap.put(KeyStroke.getKeyStroke("alt shift pressed SHIFT"), ActionType.TOGGLE_MAGNETISM_ON);
       inputMap.put(KeyStroke.getKeyStroke("alt released SHIFT"), ActionType.TOGGLE_MAGNETISM_OFF);

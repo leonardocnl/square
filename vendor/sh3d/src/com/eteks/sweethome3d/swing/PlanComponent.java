@@ -299,6 +299,8 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
   private JToolTip              toolTip;
   private JWindow               toolTipWindow;
   private boolean               resizeIndicatorVisible;
+  private boolean               magnetismToggled;
+  private boolean               mouseDragging;
 
   private Map<PlanController.EditableProperty, JFormattedTextField> toolTipEditableTextFields;
   private KeyListener                       toolTipKeyListener;
@@ -1295,15 +1297,14 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
             if (SwingUtilities.isLeftMouseButton(ev)) {
               boolean alignmentActivated = OperatingSystem.isWindows() || OperatingSystem.isMacOSX()
                   ? ev.isShiftDown()
-                  : ev.isShiftDown() && !ev.isAltDown();
+                  : ev.isShiftDown();
               boolean duplicationActivated = OperatingSystem.isMacOSX()
                   ? ev.isAltDown()
                   : ev.isControlDown();
-              boolean magnetismToggled = OperatingSystem.isWindows()
-                  ? ev.isAltDown()
-                  : (OperatingSystem.isMacOSX()
-                         ? ev.isMetaDown()
-                         : ev.isShiftDown() && ev.isAltDown());
+              boolean magnetismToggled = OperatingSystem.isMacOSX()
+                  ? (ev.isAltDown() || ev.isMetaDown())
+                  : ev.isAltDown();
+              PlanComponent.this.magnetismToggled = magnetismToggled;
               controller.pressMouse(convertXPixelToModel(ev.getX()), convertYPixelToModel(ev.getY()),
                   ev.getClickCount(), ev.isShiftDown() && !ev.isControlDown() && !ev.isAltDown() && !ev.isMetaDown(),
                   alignmentActivated, duplicationActivated, magnetismToggled);
@@ -1349,12 +1350,14 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
         @Override
         public void mouseDragged(MouseEvent ev) {
           if (isEnabled()) {
+            PlanComponent.this.mouseDragging = true;
             mouseMoved(ev);
           }
         }
 
         @Override
         public void mouseReleased(MouseEvent ev) {
+          PlanComponent.this.mouseDragging = false;
           if (isEnabled() && !ev.isPopupTrigger() && SwingUtilities.isLeftMouseButton(ev)) {
             controller.releaseMouse(convertXPixelToModel(ev.getX()), convertYPixelToModel(ev.getY()));
 
@@ -1540,15 +1543,21 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
       inputMap.put(KeyStroke.getKeyStroke("meta ESCAPE"), ActionType.ESCAPE);
       inputMap.put(KeyStroke.getKeyStroke("meta ENTER"), ActionType.ACTIVATE_EDITIION);
     } else {
-      // Under other Unix systems, magnetism toggled with Alt + Shift key
+      // Under other Unix systems, magnetism toggled with Alt key (and legacy Alt + Shift)
+      inputMap.put(KeyStroke.getKeyStroke("alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
+      inputMap.put(KeyStroke.getKeyStroke("released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
       inputMap.put(KeyStroke.getKeyStroke("shift alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
       inputMap.put(KeyStroke.getKeyStroke("alt shift pressed SHIFT"), ActionType.TOGGLE_MAGNETISM_ON);
       inputMap.put(KeyStroke.getKeyStroke("alt released SHIFT"), ActionType.TOGGLE_MAGNETISM_OFF);
       inputMap.put(KeyStroke.getKeyStroke("shift released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
+      inputMap.put(KeyStroke.getKeyStroke("control alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
+      inputMap.put(KeyStroke.getKeyStroke("control released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
       inputMap.put(KeyStroke.getKeyStroke("control shift alt pressed ALT"), ActionType.TOGGLE_MAGNETISM_ON);
       inputMap.put(KeyStroke.getKeyStroke("control alt shift pressed SHIFT"), ActionType.TOGGLE_MAGNETISM_ON);
       inputMap.put(KeyStroke.getKeyStroke("control alt released SHIFT"), ActionType.TOGGLE_MAGNETISM_OFF);
       inputMap.put(KeyStroke.getKeyStroke("control shift released ALT"), ActionType.TOGGLE_MAGNETISM_OFF);
+      inputMap.put(KeyStroke.getKeyStroke("alt ESCAPE"), ActionType.ESCAPE);
+      inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), ActionType.ACTIVATE_EDITIION);
       inputMap.put(KeyStroke.getKeyStroke("alt shift ESCAPE"), ActionType.ESCAPE);
       inputMap.put(KeyStroke.getKeyStroke("alt shift  ENTER"), ActionType.ACTIVATE_EDITIION);
       inputMap.put(KeyStroke.getKeyStroke("control alt shift ESCAPE"), ActionType.ESCAPE);
@@ -1645,6 +1654,7 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
       }
 
       public void actionPerformed(ActionEvent ev) {
+        PlanComponent.this.magnetismToggled = this.toggle;
         controller.toggleMagnetism(this.toggle);
       }
     }
@@ -3003,7 +3013,16 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
             foregroundColor, furnitureOutlineColor, paintMode, false);
         paintFurnitureOutline(g2D, this.draggedItemsFeedback, level, selectionOutlinePaint, selectionOutlineStroke, null,
             planScale, foregroundColor);
-        br.com.square.ui.guides.SmartGuidesRenderer.paintGuides(g2D, this.home, this.draggedItemsFeedback, planScale);
+      }
+
+      List<? extends Selectable> activeGuides = null;
+      if (this.draggedItemsFeedback != null) {
+        activeGuides = this.draggedItemsFeedback;
+      } else if (this.mouseDragging && !selectedItems.isEmpty()) {
+        activeGuides = selectedItems;
+      }
+      if (activeGuides != null) {
+        br.com.square.ui.guides.SmartGuidesRenderer.paintGuides(g2D, this.home, activeGuides, planScale, isMagnetismActive());
       }
 
       paintRectangleFeedback(g2D, selectionColor, planScale);
@@ -6278,6 +6297,13 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
    */
   public boolean canImportDraggedItems(List<Selectable> items, int x, int y) {
     return true;
+  }
+
+  /**
+   * Returns whether magnetism is currently active in the 2D plan view.
+   */
+  public boolean isMagnetismActive() {
+    return this.preferences.isMagnetismEnabled() ^ this.magnetismToggled;
   }
 
   /**

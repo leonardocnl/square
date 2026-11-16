@@ -166,3 +166,20 @@ flowchart LR
 - A aba "Materiais" exibe o catálogo de texturas categorizado e permite aplicar qualquer acabamento com dois cliques ou botão de aplicação.
 - Arquivos `.gltf` e `.glb` arrastados para a planta abrem o assistente de importação imediatamente.
 
+---
+
+## Marco 9: Empacotamento e Distribuição Desktop Autônoma (jpackage)
+
+**Objetivo:** Permitir a geração automatizada de binários e instaladores nativos para desktop com runtime Java embutido, eliminando a necessidade de o usuário final ter o JDK instalado.
+
+- [x] Configurar a tarefa Gradle `prepareJPackageInput` para isolar JARs de aplicação e runtime com exclusão de duplicatas.
+- [x] Implementar a tarefa `packageAppImage` para geração de imagem nativa autônoma (`app/build/dist/square/bin/square`).
+- [x] Implementar a tarefa `packageArchive` para criação do pacote portátil `.tar.gz` (`square-1.0.0-linux-x64.tar.gz`).
+- [x] Configurar tarefas para empacotamento de distribuição nativa RPM (`packageRpm`) e Debian (`packageDeb`).
+- [x] Garantir resolução de bibliotecas nativas Java3D (`.so`, `.dll`, `.dylib`) integradas ao diretório de execução.
+
+**Critério de Aceite:**
+- Geração com código de saída 0 do pacote portátil `.tar.gz` e do instalador `.rpm` em `app/build/dist/`.
+- Executável autônomo funcional sem dependência de instalação prévia de Java no sistema hospedeiro.
+
+

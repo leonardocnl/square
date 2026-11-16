@@ -79,7 +79,7 @@ public class ActionHistoryPanel extends JPanel {
         // Cabecalho do Historico
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
-        JLabel titleLabel = new JLabel("Histórico de Ações");
+        JLabel titleLabel = new JLabel("Hist\u00F3rico de A\u00E7\u00F5es");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 13f));
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
@@ -118,7 +118,7 @@ public class ActionHistoryPanel extends JPanel {
                         public void run() {
                             String name = e.getEdit().getPresentationName();
                             if (name == null || name.trim().isEmpty()) {
-                                name = "Ação";
+                                name = "A\u00E7\u00E3o";
                             }
 
                             // Remove passos futuros se um novo edit for realizado apos undo
@@ -215,7 +215,7 @@ public class ActionHistoryPanel extends JPanel {
             panel = new JPanel(new BorderLayout(8, 0));
             panel.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
 
-            bulletLabel = new JLabel("•");
+            bulletLabel = new JLabel("\u2022");
             bulletLabel.setFont(bulletLabel.getFont().deriveFont(Font.BOLD, 14f));
             panel.add(bulletLabel, BorderLayout.WEST);
 

@@ -182,7 +182,7 @@ public class MeshData {
                 }
             }
         } else {
-            // Sem indices, processa triângulos sequenciais
+            // Sem indices, processa triangulos sequenciais
             for (int i = 0; i < vertexCount; i += 3) {
                 if (i + 2 >= vertexCount) break;
                 float v0x = positions[i * 3];
@@ -275,3 +275,4 @@ public class MeshData {
         }
     }
 }
+

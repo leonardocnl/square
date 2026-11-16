@@ -44,7 +44,15 @@ public class FloatingDockComponentTest {
         assertEquals("Main content deve preencher a largura total", 1024, mainContent.getWidth());
         assertEquals("Main content deve preencher a altura total", 768, mainContent.getHeight());
         assertTrue("Dock deve estar visível por padrão", dock.isVisible());
-        assertTrue("Dock deve estar centralizado no topo com margem superior", dock.getY() > 0);
+        assertEquals("Dock deve iniciar posicionado a 42px abaixo da regua", 42, dock.getY());
+
+        // Testar posicionamento na base
+        overlay.dockToBottom();
+        assertTrue("Dock deve estar na parte inferior", dock.getY() > 600);
+
+        // Testar reposicionamento no topo
+        overlay.dockToTop();
+        assertEquals("Dock deve retornar para a margem inicial", 42, dock.getY());
 
         overlay.setDockVisible(false);
         assertFalse("Dock deve ser ocultável", dock.isVisible());

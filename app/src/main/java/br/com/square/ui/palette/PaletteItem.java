@@ -3,7 +3,7 @@ package br.com.square.ui.palette;
 import javax.swing.Icon;
 
 /**
- * Representa um item exibido na Paleta de Comandos (ação do sistema ou móvel do catálogo).
+ * Representa um item exibido na Paleta de Comandos (acao do sistema ou movel do catalogo).
  */
 public class PaletteItem {
 

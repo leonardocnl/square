@@ -1404,7 +1404,7 @@ public class HomePane extends JRootPane implements HomeView {
     });
     squareMenu.add(toggleDockItem);
 
-    final JCheckBoxMenuItem toggleClassicBarItem = new JCheckBoxMenuItem("Barra de Ferramentas Clássica", false);
+    final JCheckBoxMenuItem toggleClassicBarItem = new JCheckBoxMenuItem("Barra de Ferramentas Cl\u00E1ssica", false);
     toggleClassicBarItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
     toggleClassicBarItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -1417,7 +1417,7 @@ public class HomePane extends JRootPane implements HomeView {
     });
     squareMenu.add(toggleClassicBarItem);
 
-    final JCheckBoxMenuItem toggleInspectorItem = new JCheckBoxMenuItem("Painel Lateral (Inspetor / Histórico)", true);
+    final JCheckBoxMenuItem toggleInspectorItem = new JCheckBoxMenuItem("Painel Lateral (Inspetor / Hist\u00F3rico)", true);
     toggleInspectorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
     toggleInspectorItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -1431,7 +1431,7 @@ public class HomePane extends JRootPane implements HomeView {
     });
     squareMenu.add(toggleInspectorItem);
 
-    final JMenuItem actionHistoryItem = new JMenuItem("Histórico de Ações...");
+    final JMenuItem actionHistoryItem = new JMenuItem("Hist\u00F3rico de A\u00E7\u00F5es...");
     actionHistoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
     actionHistoryItem.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -3169,7 +3169,7 @@ public class HomePane extends JRootPane implements HomeView {
     this.rightSideTabbedPane = new JTabbedPane();
     this.rightSideTabbedPane.putClientProperty("JTabbedPane.tabHeight", 30);
     this.rightSideTabbedPane.addTab("Inspetor", this.propertyInspectorPanel);
-    this.rightSideTabbedPane.addTab("Histórico", this.actionHistoryPanel);
+    this.rightSideTabbedPane.addTab("Hist\u00F3rico", this.actionHistoryPanel);
     this.rightSideTabbedPane.setMinimumSize(new Dimension(200, 0));
 
     final JComponent workspaceComponent;

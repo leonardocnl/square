@@ -122,3 +122,4 @@ public class GltfParserTest {
         assertEquals(90.0f, mesh.getPositions()[8], 0.001f);
     }
 }
+

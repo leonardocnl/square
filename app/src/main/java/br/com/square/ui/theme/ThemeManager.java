@@ -15,8 +15,8 @@ import java.util.prefs.Preferences;
 
 /**
  * Gerenciador global de temas e Look & Feel moderno (FlatLaf) para o Square.
- * Suporta alternância dinâmica entre tema Claro e Escuro e fornece tokens
- * de cores semânticos para desenho da planta 2D.
+ * Suporta alternancia dinamica entre tema Claro e Escuro e fornece tokens
+ * de cores semanticos para desenho da planta 2D.
  */
 public final class ThemeManager {
     public enum ThemeMode {
@@ -33,7 +33,7 @@ public final class ThemeManager {
     private static final List<ThemeChangeListener> listeners = new ArrayList<ThemeChangeListener>();
     private static ThemeMode currentMode = ThemeMode.DARK;
 
-    // Tokens de cores semânticos para a Planta 2D (Modo Claro)
+    // Tokens de cores semanticos para a Planta 2D (Modo Claro)
     private static final Color LIGHT_PLAN_BACKGROUND = new Color(0xFF, 0xFF, 0xFF);
     private static final Color LIGHT_PLAN_FOREGROUND = new Color(0x1F, 0x29, 0x37);
     private static final Color LIGHT_PLAN_GRID = new Color(0xE5, 0xE7, 0xEB);
@@ -42,7 +42,7 @@ public final class ThemeManager {
     private static final Color LIGHT_PLAN_SELECTION = new Color(0x25, 0x63, 0xEB);
     private static final Color LIGHT_PLAN_WALL_OUTLINE = new Color(0x11, 0x18, 0x27);
 
-    // Tokens de cores semânticos para a Planta 2D (Modo Escuro contemporâneo)
+    // Tokens de cores semanticos para a Planta 2D (Modo Escuro contemporaneo)
     private static final Color DARK_PLAN_BACKGROUND = new Color(0x18, 0x18, 0x1B);
     private static final Color DARK_PLAN_FOREGROUND = new Color(0xF4, 0xF4, 0xF5);
     private static final Color DARK_PLAN_GRID = new Color(0x27, 0x27, 0x2A);
@@ -55,7 +55,7 @@ public final class ThemeManager {
     }
 
     /**
-     * Inicializa o Look & Feel moderno durante a inicialização da aplicação.
+     * Inicializa o Look & Feel moderno durante a inicializacao da aplicacao.
      */
     public static void setup() {
         String saved = prefs.get(PREF_THEME_KEY, ThemeMode.DARK.name());
@@ -70,7 +70,7 @@ public final class ThemeManager {
     }
 
     private static void configureFlatLafDefaults() {
-        // Estilização minimalista e moderna
+        // Estilizacao minimalista e moderna
         UIManager.put("Component.arc", 8);
         UIManager.put("Button.arc", 8);
         UIManager.put("TextComponent.arc", 6);
@@ -102,14 +102,14 @@ public final class ThemeManager {
     }
 
     /**
-     * Alterna dinamicamente entre tema Claro e Escuro com transição visual.
+     * Alterna dinamicamente entre tema Claro e Escuro com transicao visual.
      */
     public static void toggleTheme() {
         setTheme(isDark() ? ThemeMode.LIGHT : ThemeMode.DARK);
     }
 
     /**
-     * Define o tema desejado e atualiza todos os componentes da aplicação.
+     * Define o tema desejado e atualiza todos os componentes da aplicacao.
      */
     public static void setTheme(ThemeMode mode) {
         if (mode == null) {
@@ -143,7 +143,7 @@ public final class ThemeManager {
         }
     }
 
-    // --- Tokens Semânticos para o Canvas da Planta 2D ---
+    // --- Tokens Semanticos para o Canvas da Planta 2D ---
 
     public static Color getPlanBackground() {
         return isDark() ? DARK_PLAN_BACKGROUND : LIGHT_PLAN_BACKGROUND;

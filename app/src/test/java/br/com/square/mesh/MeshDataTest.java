@@ -55,3 +55,4 @@ public class MeshDataTest {
         assertEquals(22.0f, scaledBounds[3], 0.001f);
     }
 }
+

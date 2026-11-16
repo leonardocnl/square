@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Renderizador de Guias Inteligentes (Smart Guides) e Réguas Dinâmicas na Planta 2D.
- * Detecta e exibe linhas de alinhamento magnético e medidas de distância
- * em tempo real quando elementos são manipulados na planta.
+ * Renderizador de Guias Inteligentes (Smart Guides) e Reguas Dinamicas na Planta 2D.
+ * Detecta e exibe linhas de alinhamento magnetico e medidas de distancia
+ * em tempo real quando elementos sao manipulados na planta.
  */
 public final class SmartGuidesRenderer {
 
@@ -47,7 +47,7 @@ public final class SmartGuidesRenderer {
     }
 
     /**
-     * Pinta as linhas guias de alinhamento e cotas dinâmicas de distância sobre a planta 2D.
+     * Pinta as linhas guias de alinhamento e cotas dinamicas de distancia sobre a planta 2D.
      */
     public static void paintGuides(Graphics2D g2D, Home home, List<? extends Selectable> activeItems, float planScale) {
         if (home == null || activeItems == null || activeItems.isEmpty() || planScale <= 0) {
@@ -107,7 +107,7 @@ public final class SmartGuidesRenderer {
             checkAndDrawHorizontalGuide(g, activeMaxY, nMinY, activeBounds, neighbor);
         }
 
-        // 3. Medições Dinâmicas de Folga / Distância mais próxima
+        // 3. Medicoes Dinamicas de Folga / Distancia mais proxima
         paintNearestDistances(g, activeBounds, neighborBounds, planScale, dark);
 
         g.dispose();
@@ -139,7 +139,7 @@ public final class SmartGuidesRenderer {
         float bottomTargetX = (float) active.getCenterX();
 
         for (Rectangle2D n : neighbors) {
-            // Vizinho à direita com sobreposição vertical
+            // Vizinho a direita com sobreposicao vertical
             if (n.getMinX() >= active.getMaxX()) {
                 float gap = (float) (n.getMinX() - active.getMaxX());
                 if (gap < minGapRight && gap < MAX_DISTANCE_MEASURE_CM) {
@@ -149,7 +149,7 @@ public final class SmartGuidesRenderer {
                 }
             }
 
-            // Vizinho abaixo com sobreposição horizontal
+            // Vizinho abaixo com sobreposicao horizontal
             if (n.getMinY() >= active.getMaxY()) {
                 float gap = (float) (n.getMinY() - active.getMaxY());
                 if (gap < minGapBottom && gap < MAX_DISTANCE_MEASURE_CM) {
@@ -160,7 +160,7 @@ public final class SmartGuidesRenderer {
             }
         }
 
-        // Desenha cota horizontal à direita
+        // Desenha cota horizontal a direita
         if (minGapRight < MAX_DISTANCE_MEASURE_CM && minGapRight > 1.0f) {
             float startX = (float) active.getMaxX();
             float endX = startX + minGapRight;
@@ -183,7 +183,7 @@ public final class SmartGuidesRenderer {
 
         g.draw(new Line2D.Float(x1, y1, x2, y2));
 
-        // Rótulo numérico
+        // Rotulo numerico
         String text = DISTANCE_FORMAT.format(distanceCm) + " cm";
         Font origFont = g.getFont();
         float fontSize = Math.max(8f / planScale, 10f);

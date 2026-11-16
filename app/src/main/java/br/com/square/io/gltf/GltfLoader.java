@@ -94,3 +94,4 @@ public class GltfLoader extends LoaderBase implements Loader {
         return scene;
     }
 }
+

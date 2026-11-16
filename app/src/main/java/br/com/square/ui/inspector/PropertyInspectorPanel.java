@@ -52,8 +52,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Painel lateral de inspeção e edição de propriedades em tempo real (Figma-style).
- * Reage instantaneamente à seleção na planta 2D ou visualização 3D,
+ * Painel lateral de inspecao e edicao de propriedades em tempo real (Figma-style).
+ * Reage instantaneamente a selecao na planta 2D ou visualizacao 3D,
  * eliminando modais bloqueantes e suportando desfazer/refazer (Undo/Redo).
  */
 public class PropertyInspectorPanel extends JPanel {
@@ -86,7 +86,7 @@ public class PropertyInspectorPanel extends JPanel {
         setMinimumSize(new Dimension(220, 0));
         setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, UIManager.getColor("Separator.foreground")));
 
-        // Cabeçalho do Inspetor
+        // Cabecalho do Inspetor
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
         headerTitle = new JLabel("Propriedades");
@@ -94,12 +94,18 @@ public class PropertyInspectorPanel extends JPanel {
         headerPanel.add(headerTitle, BorderLayout.WEST);
         add(headerPanel, BorderLayout.NORTH);
 
-        // Conteúdo com rolagem
+        // Conteudo com rolagem
         contentContainer = new JPanel();
         contentContainer.setLayout(new BoxLayout(contentContainer, BoxLayout.Y_AXIS));
         contentContainer.setBorder(BorderFactory.createEmptyBorder(6, 12, 12, 12));
 
-        scrollPane = new JScrollPane(contentContainer);
+        contentContainer.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentContainer.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        JPanel scrollWrapper = new JPanel(new BorderLayout());
+        scrollWrapper.add(contentContainer, BorderLayout.NORTH);
+
+        scrollPane = new JScrollPane(scrollWrapper);
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane, BorderLayout.CENTER);
@@ -178,29 +184,29 @@ public class PropertyInspectorPanel extends JPanel {
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
         addSectionHeader(panel, gbc, "Resumo do Projeto");
         addReadonlyField(panel, gbc, "Paredes", String.valueOf(home.getWalls().size()));
-        addReadonlyField(panel, gbc, "Móveis", String.valueOf(home.getFurniture().size()));
-        addReadonlyField(panel, gbc, "Cômodos", String.valueOf(home.getRooms().size()));
+        addReadonlyField(panel, gbc, "M\u00F3veis", String.valueOf(home.getFurniture().size()));
+        addReadonlyField(panel, gbc, "C\u00F4modos", String.valueOf(home.getRooms().size()));
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildMultipleSelectionView(List<Selectable> items) {
-        headerTitle.setText("Seleção Múltipla (" + items.size() + ")");
+        headerTitle.setText("Sele\u00E7\u00E3o M\u00FAltipla (" + items.size() + ")");
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
         addSectionHeader(panel, gbc, "Itens Selecionados");
         addReadonlyField(panel, gbc, "Total de itens", String.valueOf(items.size()));
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildWallView(final Wall wall) {
@@ -221,9 +227,10 @@ public class PropertyInspectorPanel extends JPanel {
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
-        addSectionHeader(panel, gbc, "Dimensões");
+        addSectionHeader(panel, gbc, "Dimens\u00F5es");
         addFloatField(panel, gbc, "Comprimento (cm)", wall.getLength(), new FloatValueConsumer() {
             public void accept(float val) {
                 // Modifica o comprimento ajustando o ponto final proporcionalmente
@@ -279,7 +286,7 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addSectionHeader(panel, gbc, "Posição");
+        addSectionHeader(panel, gbc, "Posi\u00E7\u00E3o");
         addFloatField(panel, gbc, "X Inicial", wall.getXStart(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = wall.getXStart();
@@ -341,11 +348,10 @@ public class PropertyInspectorPanel extends JPanel {
         });
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildFurnitureView(final HomePieceOfFurniture piece) {
-        headerTitle.setText("Móvel: " + piece.getName());
+        headerTitle.setText("M\u00F3vel: " + piece.getName());
 
         activeItemListener = new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -362,13 +368,14 @@ public class PropertyInspectorPanel extends JPanel {
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
-        addSectionHeader(panel, gbc, "Identificação");
+        addSectionHeader(panel, gbc, "Identifica\u00E7\u00E3o");
         addTextField(panel, gbc, "Nome", piece.getName(), new StringConsumer() {
             public void accept(final String val) {
                 final String oldVal = piece.getName();
-                executeEdit("Renomear móvel", new Runnable() {
+                executeEdit("Renomear m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setName(val);
                     }
@@ -380,11 +387,11 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addSectionHeader(panel, gbc, "Dimensões");
+        addSectionHeader(panel, gbc, "Dimens\u00F5es");
         addFloatField(panel, gbc, "Largura (cm)", piece.getWidth(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = piece.getWidth();
-                executeEdit("Alterar largura do móvel", new Runnable() {
+                executeEdit("Alterar largura do m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setWidth(val);
                     }
@@ -399,7 +406,7 @@ public class PropertyInspectorPanel extends JPanel {
         addFloatField(panel, gbc, "Profundidade (cm)", piece.getDepth(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = piece.getDepth();
-                executeEdit("Alterar profundidade do móvel", new Runnable() {
+                executeEdit("Alterar profundidade do m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setDepth(val);
                     }
@@ -414,7 +421,7 @@ public class PropertyInspectorPanel extends JPanel {
         addFloatField(panel, gbc, "Altura (cm)", piece.getHeight(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = piece.getHeight();
-                executeEdit("Alterar altura do móvel", new Runnable() {
+                executeEdit("Alterar altura do m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setHeight(val);
                     }
@@ -426,11 +433,11 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addSectionHeader(panel, gbc, "Posição e Rotação");
-        addFloatField(panel, gbc, "Posição X (cm)", piece.getX(), new FloatValueConsumer() {
+        addSectionHeader(panel, gbc, "Posi\u00E7\u00E3o e Rota\u00E7\u00E3o");
+        addFloatField(panel, gbc, "Posi\u00E7\u00E3o X (cm)", piece.getX(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = piece.getX();
-                executeEdit("Mover móvel X", new Runnable() {
+                executeEdit("Mover m\u00F3vel X", new Runnable() {
                     public void run() {
                         piece.setX(val);
                     }
@@ -442,10 +449,10 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addFloatField(panel, gbc, "Posição Y (cm)", piece.getY(), new FloatValueConsumer() {
+        addFloatField(panel, gbc, "Posi\u00E7\u00E3o Y (cm)", piece.getY(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = piece.getY();
-                executeEdit("Mover móvel Y", new Runnable() {
+                executeEdit("Mover m\u00F3vel Y", new Runnable() {
                     public void run() {
                         piece.setY(val);
                     }
@@ -457,10 +464,10 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addFloatField(panel, gbc, "Elevação (cm)", piece.getElevation(), new FloatValueConsumer() {
+        addFloatField(panel, gbc, "Eleva\u00E7\u00E3o (cm)", piece.getElevation(), new FloatValueConsumer() {
             public void accept(final float val) {
                 final float oldVal = piece.getElevation();
-                executeEdit("Alterar elevação do móvel", new Runnable() {
+                executeEdit("Alterar eleva\u00E7\u00E3o do m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setElevation(val);
                     }
@@ -473,11 +480,11 @@ public class PropertyInspectorPanel extends JPanel {
         });
 
         float degrees = (float) Math.toDegrees(piece.getAngle());
-        addFloatField(panel, gbc, "Ângulo (°)", degrees, new FloatValueConsumer() {
+        addFloatField(panel, gbc, "\u00C2ngulo (\u00B0)", degrees, new FloatValueConsumer() {
             public void accept(float val) {
                 final float newAngle = (float) Math.toRadians(val);
                 final float oldAngle = piece.getAngle();
-                executeEdit("Rotacionar móvel", new Runnable() {
+                executeEdit("Rotacionar m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setAngle(newAngle);
                     }
@@ -489,11 +496,11 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addSectionHeader(panel, gbc, "Aparência");
+        addSectionHeader(panel, gbc, "Apar\u00EAncia");
         addColorChooserField(panel, gbc, "Cor", piece.getColor(), new ColorConsumer() {
             public void accept(final Integer color) {
                 final Integer oldColor = piece.getColor();
-                executeEdit("Alterar cor do móvel", new Runnable() {
+                executeEdit("Alterar cor do m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setColor(color);
                     }
@@ -505,10 +512,10 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addCheckboxField(panel, gbc, "Visível", piece.isVisible(), new BooleanConsumer() {
+        addCheckboxField(panel, gbc, "Vis\u00EDvel", piece.isVisible(), new BooleanConsumer() {
             public void accept(final boolean val) {
                 final boolean oldVal = piece.isVisible();
-                executeEdit("Alterar visibilidade do móvel", new Runnable() {
+                executeEdit("Alterar visibilidade do m\u00F3vel", new Runnable() {
                     public void run() {
                         piece.setVisible(val);
                     }
@@ -521,11 +528,10 @@ public class PropertyInspectorPanel extends JPanel {
         });
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildRoomView(final Room room) {
-        headerTitle.setText("Cômodo: " + (room.getName() != null ? room.getName() : "Sem nome"));
+        headerTitle.setText("C\u00F4modo: " + (room.getName() != null ? room.getName() : "Sem nome"));
 
         activeItemListener = new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -542,13 +548,14 @@ public class PropertyInspectorPanel extends JPanel {
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
-        addSectionHeader(panel, gbc, "Identificação");
+        addSectionHeader(panel, gbc, "Identifica\u00E7\u00E3o");
         addTextField(panel, gbc, "Nome", room.getName() != null ? room.getName() : "", new StringConsumer() {
             public void accept(final String val) {
                 final String oldVal = room.getName();
-                executeEdit("Renomear cômodo", new Runnable() {
+                executeEdit("Renomear c\u00F4modo", new Runnable() {
                     public void run() {
                         room.setName(val.isEmpty() ? null : val);
                     }
@@ -560,15 +567,15 @@ public class PropertyInspectorPanel extends JPanel {
             }
         });
 
-        addSectionHeader(panel, gbc, "Dimensões");
+        addSectionHeader(panel, gbc, "Dimens\u00F5es");
         float areaSqMeters = room.getArea() / 10000f;
-        addReadonlyField(panel, gbc, "Área", String.format(Locale.US, "%.2f m²", areaSqMeters));
+        addReadonlyField(panel, gbc, "\u00C1rea", String.format(Locale.US, "%.2f m\u00B2", areaSqMeters));
 
         addSectionHeader(panel, gbc, "Acabamento");
-        addColorChooserField(panel, gbc, "Cor do Chão", room.getFloorColor(), new ColorConsumer() {
+        addColorChooserField(panel, gbc, "Cor do Ch\u00E3o", room.getFloorColor(), new ColorConsumer() {
             public void accept(final Integer color) {
                 final Integer oldColor = room.getFloorColor();
-                executeEdit("Alterar cor do chão do cômodo", new Runnable() {
+                executeEdit("Alterar cor do ch\u00E3o do c\u00F4modo", new Runnable() {
                     public void run() {
                         room.setFloorColor(color);
                     }
@@ -583,7 +590,7 @@ public class PropertyInspectorPanel extends JPanel {
         addColorChooserField(panel, gbc, "Cor do Teto", room.getCeilingColor(), new ColorConsumer() {
             public void accept(final Integer color) {
                 final Integer oldColor = room.getCeilingColor();
-                executeEdit("Alterar cor do teto do cômodo", new Runnable() {
+                executeEdit("Alterar cor do teto do c\u00F4modo", new Runnable() {
                     public void run() {
                         room.setCeilingColor(color);
                     }
@@ -596,31 +603,31 @@ public class PropertyInspectorPanel extends JPanel {
         });
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildDimensionLineView(final DimensionLine line) {
-        headerTitle.setText("Cota / Dimensão");
+        headerTitle.setText("Cota / Dimens\u00E3o");
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
-        addSectionHeader(panel, gbc, "Dimensão");
+        addSectionHeader(panel, gbc, "Dimens\u00E3o");
         addReadonlyField(panel, gbc, "Comprimento", String.format(Locale.US, "%.1f cm", line.getLength()));
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildLabelView(final Label label) {
-        headerTitle.setText("Texto / Rótulo");
+        headerTitle.setText("Texto / R\u00F3tulo");
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
-        addSectionHeader(panel, gbc, "Conteúdo");
+        addSectionHeader(panel, gbc, "Conte\u00FAdo");
         addTextField(panel, gbc, "Texto", label.getText(), new StringConsumer() {
             public void accept(final String val) {
                 final String oldVal = label.getText();
@@ -637,7 +644,6 @@ public class PropertyInspectorPanel extends JPanel {
         });
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     private void buildGenericItemView(Selectable item) {
@@ -645,13 +651,13 @@ public class PropertyInspectorPanel extends JPanel {
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.setAlignmentY(Component.TOP_ALIGNMENT);
         GridBagConstraints gbc = createGbc();
 
-        addSectionHeader(panel, gbc, "Informações");
+        addSectionHeader(panel, gbc, "Informa\u00E7\u00F5es");
         addReadonlyField(panel, gbc, "Tipo", item.getClass().getSimpleName());
 
         contentContainer.add(panel);
-        contentContainer.add(Box.createVerticalGlue());
     }
 
     // --- Componentes e Auxiliares de UI ---
@@ -786,7 +792,7 @@ public class PropertyInspectorPanel extends JPanel {
             btnColor.setBackground(new Color(initialColor));
             btnColor.setText("");
         } else {
-            btnColor.setText("Padrão");
+            btnColor.setText("Padr\u00E3o");
         }
 
         btnColor.addActionListener(new ActionListener() {

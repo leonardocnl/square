@@ -262,3 +262,4 @@ public class GltfParser {
         return indices;
     }
 }
+

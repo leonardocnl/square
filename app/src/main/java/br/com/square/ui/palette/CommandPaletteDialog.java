@@ -65,7 +65,7 @@ public class CommandPaletteDialog extends JDialog {
         searchPanel.setBorder(BorderFactory.createEmptyBorder(12, 14, 10, 14));
 
         searchField = new JTextField();
-        searchField.putClientProperty("JTextField.placeholderText", "Buscar comandos, ferramentas ou móveis...");
+        searchField.putClientProperty("JTextField.placeholderText", "Buscar comandos, ferramentas ou m\u00F3veis...");
         searchField.putClientProperty("Component.arc", 8);
         searchField.setFont(searchField.getFont().deriveFont(14f));
         searchField.setBorder(BorderFactory.createCompoundBorder(
@@ -89,7 +89,7 @@ public class CommandPaletteDialog extends JDialog {
         // Rodape: Instrucoes de atalhos
         JPanel footerPanel = new JPanel(new BorderLayout());
         footerPanel.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
-        JLabel hintsLabel = new JLabel("Navegar: ↑↓   •   Executar: Enter   •   Fechar: Esc");
+        JLabel hintsLabel = new JLabel("Navegar: \u2191\u2193   \u2022   Executar: Enter   \u2022   Fechar: Esc");
         hintsLabel.setFont(hintsLabel.getFont().deriveFont(11f));
         hintsLabel.setForeground(UIManager.getColor("Label.disabledForeground"));
         footerPanel.add(hintsLabel, BorderLayout.WEST);
@@ -240,7 +240,7 @@ public class CommandPaletteDialog extends JDialog {
                 titleLabel.setText(item.getTitle());
                 subtitleLabel.setText("  " + item.getSubtitle());
                 iconLabel.setIcon(item.getIcon());
-                badgeLabel.setText(item.getType() == PaletteItem.ItemType.COMMAND ? "AÇÃO" : "CATÁLOGO");
+                badgeLabel.setText(item.getType() == PaletteItem.ItemType.COMMAND ? "A\u00C7\u00C3O" : "CAT\u00C1LOGO");
 
                 if (isSelected) {
                     cellPanel.setBackground(UIManager.getColor("List.selectionBackground"));

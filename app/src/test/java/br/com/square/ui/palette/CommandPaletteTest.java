@@ -57,5 +57,19 @@ public class CommandPaletteTest {
         // Execucao do comando
         matchedItem.execute();
         assertTrue("Acao do item deve ser executada com sucesso", actionExecuted.get());
+
+        // Validar que acoes internas como 'release' e 'press' sao filtradas
+        actionMap.put("release", new AbstractAction("release") {
+            public void actionPerformed(ActionEvent e) {}
+        });
+        actionMap.put("press", new AbstractAction("press") {
+            public void actionPerformed(ActionEvent e) {}
+        });
+        model.reindex();
+
+        for (PaletteItem item : model.getAllItems()) {
+            assertFalse("Acoes internas 'release' nao podem vazar", "release".equalsIgnoreCase(item.getTitle()));
+            assertFalse("Acoes internas 'press' nao podem vazar", "press".equalsIgnoreCase(item.getTitle()));
+        }
     }
 }

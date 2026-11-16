@@ -274,6 +274,10 @@ public class HomePane extends JRootPane implements HomeView {
   private br.com.square.ui.materials.MaterialsCatalogPanel materialsCatalogPanel;
   private JTabbedPane           leftSideTabbedPane;
   private JSplitPane            workspaceWithInspector;
+  private boolean               presentationMode;
+  private boolean               previousLeftPanelVisible = true;
+  private boolean               previousRightPanelVisible = true;
+  private boolean               previousClassicToolBarVisible = false;
 
   /**
    * Creates home view associated with its controller.
@@ -329,6 +333,24 @@ public class HomePane extends JRootPane implements HomeView {
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_K, shortcutMask), WHEN_IN_FOCUSED_WINDOW);
 
+    registerKeyboardAction(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        openKeyboardShortcutsDialog();
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, shortcutMask), WHEN_IN_FOCUSED_WINDOW);
+
+    registerKeyboardAction(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        openKeyboardShortcutsDialog();
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), WHEN_IN_FOCUSED_WINDOW);
+
+    registerKeyboardAction(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        togglePresentationMode();
+      }
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), WHEN_IN_FOCUSED_WINDOW);
+
     disableMenuItemsDuringDragAndDrop(controller.getPlanController().getView(), homeMenuBar);
     // Change component orientation
     applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
@@ -342,6 +364,58 @@ public class HomePane extends JRootPane implements HomeView {
     br.com.square.ui.palette.CommandPaletteDialog dialog =
         new br.com.square.ui.palette.CommandPaletteDialog(window, this.home, this.controller, this.preferences, getActionMap());
     dialog.setVisible(true);
+  }
+
+  /**
+   * Abre a central de atalhos de teclado (Ctrl+/ ou F1).
+   */
+  public void openKeyboardShortcutsDialog() {
+    br.com.square.ui.shortcuts.KeyboardShortcutsDialog dialog =
+        new br.com.square.ui.shortcuts.KeyboardShortcutsDialog(this);
+    dialog.setVisible(true);
+  }
+
+  /**
+   * Alterna o modo de apresentacao / foco limpo (F11).
+   */
+  public void togglePresentationMode() {
+    this.presentationMode = !this.presentationMode;
+    if (this.presentationMode) {
+      if (this.leftSideTabbedPane != null) {
+        this.previousLeftPanelVisible = this.leftSideTabbedPane.isVisible();
+        this.leftSideTabbedPane.setVisible(false);
+      }
+      if (this.rightSideTabbedPane != null) {
+        this.previousRightPanelVisible = this.rightSideTabbedPane.isVisible();
+        this.rightSideTabbedPane.setVisible(false);
+      }
+      if (this.classicToolBar != null) {
+        this.previousClassicToolBarVisible = this.classicToolBar.isVisible();
+        this.classicToolBar.setVisible(false);
+      }
+    } else {
+      if (this.leftSideTabbedPane != null) {
+        this.leftSideTabbedPane.setVisible(this.previousLeftPanelVisible);
+      }
+      if (this.rightSideTabbedPane != null) {
+        this.rightSideTabbedPane.setVisible(this.previousRightPanelVisible);
+      }
+      if (this.classicToolBar != null) {
+        this.classicToolBar.setVisible(this.previousClassicToolBarVisible);
+      }
+    }
+    if (this.workspaceWithInspector != null) {
+      this.workspaceWithInspector.resetToPreferredSizes();
+    }
+    revalidate();
+    repaint();
+  }
+
+  /**
+   * Indica se o modo apresentacao esta ativo.
+   */
+  public boolean isPresentationMode() {
+    return this.presentationMode;
   }
 
   /**
@@ -1503,6 +1577,24 @@ public class HomePane extends JRootPane implements HomeView {
       }
     });
     squareMenu.add(commandPaletteItem);
+
+    final JMenuItem presentationModeItem = new JMenuItem("Modo Apresenta\u00E7\u00E3o (Foco Limpo)");
+    presentationModeItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
+    presentationModeItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        togglePresentationMode();
+      }
+    });
+    squareMenu.add(presentationModeItem);
+
+    final JMenuItem shortcutsHelpItem = new JMenuItem("Atalhos de Teclado...");
+    shortcutsHelpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, shortcutMask));
+    shortcutsHelpItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        openKeyboardShortcutsDialog();
+      }
+    });
+    squareMenu.add(shortcutsHelpItem);
 
     menuBar.add(squareMenu);
 

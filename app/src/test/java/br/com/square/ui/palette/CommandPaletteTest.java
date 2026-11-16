@@ -81,5 +81,10 @@ public class CommandPaletteTest {
         List<PaletteItem> memorialResults = model.filter("memorial");
         assertFalse("Busca por 'memorial' deve retornar a acao de memorial", memorialResults.isEmpty());
         assertTrue("Item deve conter mencao a Memorial", memorialResults.get(0).getTitle().contains("Memorial"));
+
+        // Filtragem por acao de Atalhos
+        List<PaletteItem> shortcutResults = model.filter("atalhos");
+        assertFalse("Busca por 'atalhos' deve retornar a acao de atalhos", shortcutResults.isEmpty());
+        assertTrue("Item deve conter mencao a Atalhos", shortcutResults.get(0).getTitle().contains("Atalhos"));
     }
 }

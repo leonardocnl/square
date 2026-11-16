@@ -213,6 +213,20 @@ public class CommandPaletteModel {
                         }
                     }
             ));
+
+            indexedItems.add(new PaletteItem(
+                    "Atalhos de Teclado e Comandos...",
+                    "Ajuda",
+                    PaletteItem.ItemType.COMMAND,
+                    null,
+                    new Runnable() {
+                        public void run() {
+                            br.com.square.ui.shortcuts.KeyboardShortcutsDialog dialog =
+                                    new br.com.square.ui.shortcuts.KeyboardShortcutsDialog(null);
+                            dialog.setVisible(true);
+                        }
+                    }
+            ));
         }
 
         // 2. Indexar Moveis do Catalogo com categoria e dimensoes em cm

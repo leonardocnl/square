@@ -240,3 +240,21 @@ flowchart LR
 
 
 
+
+
+---
+
+## Marco 13: Central de Atalhos, Cheatsheet Interativa e Modo Apresentacao (Foco Limpo)
+
+**Objetivo:** Proporcionar maxima produtividade e agilidade com um mapa interativo e filtravel de todos os atalhos de teclado do Square, alem de um modo de apresentacao imersivo (F11 / Foco Limpo) para exibicao a clientes e trabalho sem distracoes visuais.
+
+- [x] Desenvolver o dialogo interativo de atalhos de teclado (`KeyboardShortcutsDialog`) com busca em tempo real e categorias organizadas (Geral, Desenho 2D, Edicao, Render e Exportacao).
+- [x] Vincular a abertura da central de atalhos aos atalhos `Ctrl+/` e `F1`, alem do menu Square e paleta de comandos `Ctrl+K`.
+- [x] Implementar o Modo Apresentacao (`togglePresentationMode` / `F11`), alternando de forma reversivel a visibilidade do catalogo esquerdo, inspetor direito e barras secundarias, maximizando a area de desenho e 3D.
+- [x] Adicionar comandos correspondentes no menu Square e indexacao na paleta universal.
+- [x] Implementar testes unitarios para o catalogo de atalhos (`KeyboardShortcutsDialogTest`) e integracao com a paleta.
+
+**Criterio de Aceite:**
+- Atalhos `Ctrl+/` e `F1` abrem o dialogo de atalhos com busca instantanea por termos e categorias.
+- Tecla `F11` alterna o modo de foco limpo, ocultando paineis laterais para apresentacao e restaurando o estado anterior ao desativar.
+- Testes unitarios cobrindo catalogo de atalhos e busca na paleta executados com sucesso.

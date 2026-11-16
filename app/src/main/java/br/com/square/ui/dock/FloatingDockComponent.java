@@ -164,6 +164,11 @@ public class FloatingDockComponent extends JPanel {
         addButton(actionMap, ActionType.ZOOM_OUT, false);
         addButton(actionMap, ActionType.VIEW_FROM_TOP, true);
         addButton(actionMap, ActionType.VIEW_FROM_OBSERVER, true);
+
+        addSeparator();
+
+        // Grupo 5: Estudio de Renderizacao Foto
+        addButton(actionMap, ActionType.CREATE_PHOTO, false);
     }
 
     private void addButton(ActionMap actionMap, ActionType actionType, boolean isToggle) {

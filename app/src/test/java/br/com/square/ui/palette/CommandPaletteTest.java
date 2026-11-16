@@ -71,5 +71,10 @@ public class CommandPaletteTest {
             assertFalse("Acoes internas 'release' nao podem vazar", "release".equalsIgnoreCase(item.getTitle()));
             assertFalse("Acoes internas 'press' nao podem vazar", "press".equalsIgnoreCase(item.getTitle()));
         }
+
+        // Filtragem por acao estendida SVG
+        List<PaletteItem> svgResults = model.filter("svg");
+        assertFalse("Busca por 'svg' deve retornar a acao de exportacao", svgResults.isEmpty());
+        assertTrue("Item deve conter mencao a SVG", svgResults.get(0).getTitle().contains("SVG"));
     }
 }

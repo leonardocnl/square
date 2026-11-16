@@ -323,7 +323,7 @@ public class SwingViewFactory implements ViewFactory {
   public DialogView createPhotoView(Home home,
                                     UserPreferences preferences,
                                     PhotoController photoController) {
-    return new PhotoPanel(home, preferences, photoController);
+    return new br.com.square.ui.render.RenderStudioDialog(home, preferences, photoController);
   }
 
   /**

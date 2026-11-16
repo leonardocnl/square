@@ -1447,6 +1447,43 @@ public class HomePane extends JRootPane implements HomeView {
     squareMenu.add(actionHistoryItem);
     squareMenu.addSeparator();
 
+    final JMenuItem renderStudioItem = new JMenuItem("Est\u00FAdio de Renderiza\u00E7\u00E3o Foto...");
+    renderStudioItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    renderStudioItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        controller.createPhoto();
+      }
+    });
+    squareMenu.add(renderStudioItem);
+
+    final JMenuItem exportSvgItem = new JMenuItem("Exportar Planta em SVG...");
+    exportSvgItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    exportSvgItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        fileChooser.setDialogTitle("Exportar Planta em SVG");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Scalable Vector Graphics (*.svg)", "svg"));
+        fileChooser.setSelectedFile(new java.io.File("planta-arquitetural.svg"));
+        int result = fileChooser.showSaveDialog(HomePane.this);
+        if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
+          java.io.File selectedFile = fileChooser.getSelectedFile();
+          if (!selectedFile.getName().toLowerCase().endsWith(".svg")) {
+            selectedFile = new java.io.File(selectedFile.getAbsolutePath() + ".svg");
+          }
+          try {
+            br.com.square.export.SvgPlanExporter.exportToFile(home, selectedFile);
+            JOptionPane.showMessageDialog(HomePane.this, "Planta vetorial salva com sucesso em:\n" + selectedFile.getAbsolutePath(),
+                "Exportacao SVG Concluida", JOptionPane.INFORMATION_MESSAGE);
+          } catch (Exception ex) {
+            JOptionPane.showMessageDialog(HomePane.this, "Falha ao exportar SVG: " + ex.getMessage(),
+                "Erro de Exportacao", JOptionPane.ERROR_MESSAGE);
+          }
+        }
+      }
+    });
+    squareMenu.add(exportSvgItem);
+    squareMenu.addSeparator();
+
     final JMenuItem commandPaletteItem = new JMenuItem("Paleta de Comandos...");
     commandPaletteItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, shortcutMask));
     commandPaletteItem.addActionListener(new ActionListener() {

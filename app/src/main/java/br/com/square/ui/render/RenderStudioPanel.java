@@ -72,6 +72,14 @@ public class RenderStudioPanel extends JPanel {
     private PreviewCanvas previewCanvas;
     private BufferedImage currentRenderedImage;
 
+    public RenderStudioPanel(Home home, UserPreferences preferences) {
+        this(home, null, preferences);
+    }
+
+    public RenderStudioPanel(Home home, UserPreferences preferences, com.eteks.sweethome3d.viewcontroller.PhotoController photoController) {
+        this(home, null, preferences);
+    }
+
     public RenderStudioPanel(Home home, HomeController controller, UserPreferences preferences) {
         this.home = home;
         this.controller = controller;
@@ -442,3 +450,4 @@ public class RenderStudioPanel extends JPanel {
         }
     }
 }
+

@@ -168,6 +168,39 @@ public class CommandPaletteModel {
             }
         }
 
+        // Acoes estendidas de exportacao do Square
+        if (home != null) {
+            indexedItems.add(new PaletteItem(
+                    "Exportar planta em SVG...",
+                    "Exporta\u00E7\u00E3o",
+                    PaletteItem.ItemType.COMMAND,
+                    null,
+                    new Runnable() {
+                        public void run() {
+                            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+                            fileChooser.setDialogTitle("Exportar Planta em SVG");
+                            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Scalable Vector Graphics (*.svg)", "svg"));
+                            fileChooser.setSelectedFile(new java.io.File("planta-arquitetural.svg"));
+                            int result = fileChooser.showSaveDialog(null);
+                            if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
+                                java.io.File selectedFile = fileChooser.getSelectedFile();
+                                if (!selectedFile.getName().toLowerCase().endsWith(".svg")) {
+                                    selectedFile = new java.io.File(selectedFile.getAbsolutePath() + ".svg");
+                                }
+                                try {
+                                    br.com.square.export.SvgPlanExporter.exportToFile(home, selectedFile);
+                                    javax.swing.JOptionPane.showMessageDialog(null, "Planta vetorial salva com sucesso em:\n" + selectedFile.getAbsolutePath(),
+                                            "Exportacao SVG Concluida", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                                } catch (Exception ex) {
+                                    javax.swing.JOptionPane.showMessageDialog(null, "Falha ao exportar SVG: " + ex.getMessage(),
+                                            "Erro de Exportacao", javax.swing.JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        }
+                    }
+            ));
+        }
+
         // 2. Indexar Moveis do Catalogo com categoria e dimensoes em cm
         if (preferences != null && preferences.getFurnitureCatalog() != null) {
             for (final FurnitureCategory category : preferences.getFurnitureCatalog().getCategories()) {

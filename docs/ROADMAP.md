@@ -147,3 +147,22 @@ flowchart LR
 - Navegação fluida em projetos grandes com mais de 500 objetos em 60 FPS contínuos.
 - Capacidade de importar e renderizar arquivos `.gltf`/`.glb` com materiais e texturas corretas no catálogo e na visualização 3D.
 
+---
+
+## Marco 8: Refinamento de UX, Materiais e Drag-and-Drop glTF/GLB (Frente 1)
+
+**Objetivo:** Elevar a velocidade e ergonomia do fluxo de trabalho na planta 2D com atração magnética inteligente, gerenciamento direto de materiais e importação imediata de modelos.
+
+- [x] Snapping magnético abrangente de arestas e centros de massa com cálculo em tempo real (`SmartGuidesRenderer.computeSnap`).
+- [x] Modificador universal da tecla `Alt` para ignorar temporariamente qualquer snap com movimento milimétrico suave em Linux, Windows e macOS.
+- [x] Travamento magnético angular em múltiplos de 15, 45 e 90 graus em rotações.
+- [x] Aba dedicada de Materiais e Acabamentos (`MaterialsCatalogPanel`) no painel esquerdo junto ao catálogo de móveis.
+- [x] Aplicação direta de texturas e acabamentos a móveis, paredes e cômodos selecionados com histórico de `undo/redo`.
+- [x] Aceitação nativa de modelos `.gltf` e `.glb` no `FileContentManager`, viabilizando drag-and-drop direto de arquivos externos para a planta 2D.
+
+**Critério de Aceite:**
+- Arrastar móveis na planta 2D ativa linhas guias e atração magnética precisa a arestas e centros vizinhos.
+- Pressionar e segurar `Alt` desativa o snap e as guias instantaneamente.
+- A aba "Materiais" exibe o catálogo de texturas categorizado e permite aplicar qualquer acabamento com dois cliques ou botão de aplicação.
+- Arquivos `.gltf` e `.glb` arrastados para a planta abrem o assistente de importação imediatamente.
+

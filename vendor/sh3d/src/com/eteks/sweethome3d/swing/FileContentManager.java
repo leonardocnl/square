@@ -109,7 +109,23 @@ public class FileContentManager implements ContentManager {
   private static final String DAE_EXTENSION = ".dae";
   private static final String KMZ_EXTENSION = ".kmz";
   private static final String ZIP_EXTENSION = ".zip";
+  private static final String GLTF_EXTENSION = ".gltf";
+  private static final String GLB_EXTENSION = ".glb";
   private static final FileFilter [] MODEL_FILTERS = {
+     new FileFilter() {
+       @Override
+       public boolean accept(File file) {
+         // Accept directories, GLTF and GLB files
+         return file.isDirectory()
+                || file.getName().toLowerCase().endsWith(GLTF_EXTENSION)
+                || file.getName().toLowerCase().endsWith(GLB_EXTENSION);
+       }
+
+       @Override
+       public String getDescription() {
+         return "glTF / GLB - GL Transmission Format";
+       }
+     },
      OBJ_FILTER [0],
      new FileFilter() {
        @Override
@@ -471,7 +487,7 @@ public class FileContentManager implements ContentManager {
     this.fileExtensions.put(ContentType.SVG,               new String [] {SVG_EXTENSION});
     this.fileExtensions.put(ContentType.OBJ,               new String [] {OBJ_EXTENSION});
     this.fileExtensions.put(ContentType.MODEL,
-        new String [] {OBJ_EXTENSION, LWS_EXTENSION, THREEDS_EXTENSION, DAE_EXTENSION, ZIP_EXTENSION, KMZ_EXTENSION});
+        new String [] {GLTF_EXTENSION, GLB_EXTENSION, OBJ_EXTENSION, LWS_EXTENSION, THREEDS_EXTENSION, DAE_EXTENSION, ZIP_EXTENSION, KMZ_EXTENSION});
     this.fileExtensions.put(ContentType.IMAGE,
         new String [] {PNG_EXTENSION, JPEG_EXTENSION, BMP_EXTENSION, WBMP_EXTENSION, GIF_EXTENSION} );
   }

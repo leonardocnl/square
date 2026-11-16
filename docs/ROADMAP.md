@@ -200,5 +200,24 @@ flowchart LR
 - Avaliação média de snap magnético em menos de 0,1 ms por cálculo, assegurando mais de 2.000 avaliações/segundo.
 - 6.000 operações de undo/redo concluídas em 17 ms com retorno exato ao estado inicial e estabilidade total de heap.
 
+---
+
+## Marco 11: Pipeline de Renderização Foto, Iluminação e Exportação (Frente 3)
+
+**Objetivo:** Fornecer um estúdio contemporâneo e desacoplado para renderização fotorrealista (Sunflow), controle preciso de iluminação solar e artificial, e exportação vetorial e em alta resolução da planta 2D.
+
+- [x] Desenvolver o serviço desacoplado de renderização assíncrona (`RenderStudioService`) com execução em background e sem travamento da EDT.
+- [x] Implementar controle contínuo do horário solar (00:00 às 23:59) e chaveamento de iluminação de teto/ambiente.
+- [x] Desenvolver o painel moderno do estúdio de renderização (`RenderStudioPanel`) com pré-visualização, presets de resolução (720p, 1080p, 4K, 1:1, 4:5) e barra de progresso.
+- [x] Implementar exportação direta de imagens renderizadas em PNG e JPEG, e suporte a cópia imediata para a área de transferência do sistema (Clipboard).
+- [x] Desenvolver o exportador vetorial puro da planta 2D para SVG (`SvgPlanExporter`), gerando camadas limpas para paredes, cômodos com áreas calculadas, móveis e cotas.
+- [x] Desenvolver o exportador raster de alta resolução (`HighResPlanExporter`) com renderização anti-aliased em escala arquitetural.
+
+**Critério de Aceite:**
+- Renderização assíncrona executada em thread de background com cancelamento seguro e controle de estado.
+- Arquivos SVG exportados com XML válido, camadas semânticas (`#rooms`, `#walls`, `#furniture`, `#dimensionLines`) e sem artefatos ou valores NaN.
+- Exportação em alta resolução (1080p e 4K) gerada com sucesso e sem perda de fidelidade geométrica.
+
+
 
 

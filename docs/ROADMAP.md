@@ -182,4 +182,23 @@ flowchart LR
 - Geração com código de saída 0 do pacote portátil `.tar.gz` e do instalador `.rpm` em `app/build/dist/`.
 - Executável autônomo funcional sem dependência de instalação prévia de Java no sistema hospedeiro.
 
+---
+
+## Marco 10: Suíte de Testes de Carga, Estresse e Escalabilidade (Frente 2)
+
+**Objetivo:** Validar a resiliência computacional, limites de memória, integridade transacional de undo/redo e tempo de resposta do square em cenários extremos com milhares de entidades simultâneas.
+
+- [x] Implementar teste de geração massiva de planta (`LargeHomeStressTest`) com 500 paredes conectadas, 1.000 móveis e 100 cômodos.
+- [x] Implementar benchmark e teste de paridade de serialização `.sh3d` (`SerializationBenchmarkTest`) com assert de integridade de coordenadas e áreas.
+- [x] Implementar teste de estresse transacional de memória e undo/redo (`UndoRedoMemoryStressTest`) com 6.000 operações em cascata e verificação de garbage collection.
+- [x] Implementar teste de estresse de guias inteligentes (`SmartGuidesStressTest`) com 5.000 avaliações de snap sob centenas de obstáculos vizinhos.
+- [x] Implementar teste de estresse de alternâncias rápidas no inspetor reativo (`PropertyInspectorStressTest`) com mais de 350 reconstruções contínuas de layout.
+
+**Critério de Aceite:**
+- Geração de 1.600 elementos estruturais concluída em menos de 50 ms.
+- Escrita e leitura completa de arquivo `.sh3d` massivo executadas em ~210 ms.
+- Avaliação média de snap magnético em menos de 0,1 ms por cálculo, assegurando mais de 2.000 avaliações/segundo.
+- 6.000 operações de undo/redo concluídas em 17 ms com retorno exato ao estado inicial e estabilidade total de heap.
+
+
 

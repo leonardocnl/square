@@ -1482,6 +1482,17 @@ public class HomePane extends JRootPane implements HomeView {
       }
     });
     squareMenu.add(exportSvgItem);
+
+    final JMenuItem specificationReportItem = new JMenuItem("Memorial Descritivo e Quantitativos...");
+    specificationReportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, shortcutMask | InputEvent.SHIFT_DOWN_MASK));
+    specificationReportItem.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        br.com.square.ui.report.ProjectSpecificationDialog dialog =
+            new br.com.square.ui.report.ProjectSpecificationDialog(HomePane.this, home);
+        dialog.setVisible(true);
+      }
+    });
+    squareMenu.add(specificationReportItem);
     squareMenu.addSeparator();
 
     final JMenuItem commandPaletteItem = new JMenuItem("Paleta de Comandos...");

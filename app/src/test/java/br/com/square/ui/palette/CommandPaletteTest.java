@@ -76,5 +76,10 @@ public class CommandPaletteTest {
         List<PaletteItem> svgResults = model.filter("svg");
         assertFalse("Busca por 'svg' deve retornar a acao de exportacao", svgResults.isEmpty());
         assertTrue("Item deve conter mencao a SVG", svgResults.get(0).getTitle().contains("SVG"));
+
+        // Filtragem por acao estendida Memorial Descritivo
+        List<PaletteItem> memorialResults = model.filter("memorial");
+        assertFalse("Busca por 'memorial' deve retornar a acao de memorial", memorialResults.isEmpty());
+        assertTrue("Item deve conter mencao a Memorial", memorialResults.get(0).getTitle().contains("Memorial"));
     }
 }

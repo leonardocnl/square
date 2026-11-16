@@ -199,6 +199,20 @@ public class CommandPaletteModel {
                         }
                     }
             ));
+
+            indexedItems.add(new PaletteItem(
+                    "Memorial Descritivo e Quantitativos (BOM)...",
+                    "Relat\u00F3rios",
+                    PaletteItem.ItemType.COMMAND,
+                    null,
+                    new Runnable() {
+                        public void run() {
+                            br.com.square.ui.report.ProjectSpecificationDialog dialog =
+                                    new br.com.square.ui.report.ProjectSpecificationDialog(null, home);
+                            dialog.setVisible(true);
+                        }
+                    }
+            ));
         }
 
         // 2. Indexar Moveis do Catalogo com categoria e dimensoes em cm

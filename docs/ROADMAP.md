@@ -218,6 +218,25 @@ flowchart LR
 - Arquivos SVG exportados com XML válido, camadas semânticas (`#rooms`, `#walls`, `#furniture`, `#dimensionLines`) e sem artefatos ou valores NaN.
 - Exportação em alta resolução (1080p e 4K) gerada com sucesso e sem perda de fidelidade geométrica.
 
+---
+
+## Marco 12: Memorial Descritivo Executivo, Orçamentos e Relatórios BOM
+
+**Objetivo:** Gerar documentação técnica executiva de arquitetura e design de interiores (BOM - Bill of Materials), quantificando áreas, extensões de paredes, acabamentos e relação detalhada de mobiliário com atribuição espacial automática por cômodo.
+
+- [x] Implementar o compilador de dados do projeto (`ProjectSpecificationReport`) com cálculo de área total útil, perímetro de cômodos, extensão linear de paredes e superfície para revestimentos/pintura.
+- [x] Desenvolver algoritmo de atribuição espacial automática de móveis, portas e janelas com base no polígono do cômodo em que estão contidos (`room.containsPoint`).
+- [x] Desenvolver gerador e exportador de relatório executivo em formato HTML responsivo e pronto para impressão técnica.
+- [x] Desenvolver exportador de dados tabulares em formato CSV para planilhas de quantitativos e orçamentos.
+- [x] Desenvolver o diálogo de visualização executiva (`ProjectSpecificationDialog`) com cartões de KPI, abas temáticas e ações de exportação direta.
+- [x] Integrar a ação ao menu Square (`Ctrl+Shift+Q`) e à paleta de comandos universal (`Ctrl+K`).
+
+**Critério de Aceite:**
+- Atribuição precisa de móveis aos seus respectivos cômodos com base nas coordenadas da planta.
+- Relatórios em HTML e CSV gerados sem erros, contendo quadro de áreas, relação de peças e quadro de esquadrias.
+- Testes automatizados aprovados validando integridade de dados e geração de arquivos.
+
+
 
 
 

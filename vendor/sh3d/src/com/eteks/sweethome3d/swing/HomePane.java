@@ -271,6 +271,8 @@ public class HomePane extends JRootPane implements HomeView {
   private br.com.square.ui.inspector.PropertyInspectorPanel propertyInspectorPanel;
   private br.com.square.ui.history.ActionHistoryPanel actionHistoryPanel;
   private JTabbedPane           rightSideTabbedPane;
+  private br.com.square.ui.materials.MaterialsCatalogPanel materialsCatalogPanel;
+  private JTabbedPane           leftSideTabbedPane;
   private JSplitPane            workspaceWithInspector;
 
   /**
@@ -3159,6 +3161,18 @@ public class HomePane extends JRootPane implements HomeView {
   private JComponent createMainPane(Home home, UserPreferences preferences,
                                     HomeController controller) {
     final JComponent catalogFurniturePane = createCatalogFurniturePane(home, preferences, controller);
+    final JComponent leftPanelComponent;
+    if (catalogFurniturePane != null) {
+      this.materialsCatalogPanel = new br.com.square.ui.materials.MaterialsCatalogPanel(home, preferences, controller);
+      this.leftSideTabbedPane = new JTabbedPane();
+      this.leftSideTabbedPane.putClientProperty("JTabbedPane.tabHeight", 30);
+      this.leftSideTabbedPane.addTab("M\u00F3veis", catalogFurniturePane);
+      this.leftSideTabbedPane.addTab("Materiais", this.materialsCatalogPanel);
+      this.leftSideTabbedPane.setMinimumSize(new Dimension(200, 0));
+      leftPanelComponent = this.leftSideTabbedPane;
+    } else {
+      leftPanelComponent = null;
+    }
     final JComponent planView3DPane = createPlanView3DPane(home, preferences, controller);
 
     this.propertyInspectorPanel = new br.com.square.ui.inspector.PropertyInspectorPanel(home, controller, preferences);
@@ -3181,15 +3195,15 @@ public class HomePane extends JRootPane implements HomeView {
       workspaceComponent = this.rightSideTabbedPane;
     }
 
-    if (catalogFurniturePane == null) {
+    if (leftPanelComponent == null) {
       return workspaceComponent;
     } else if (planView3DPane == null) {
-      return catalogFurniturePane;
+      return leftPanelComponent;
     } else {
       boolean leftToRightOrientation = ComponentOrientation.getOrientation(Locale.getDefault()).isLeftToRight();
       final JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-          leftToRightOrientation ? catalogFurniturePane : workspaceComponent,
-          leftToRightOrientation ? workspaceComponent : catalogFurniturePane);
+          leftToRightOrientation ? leftPanelComponent : workspaceComponent,
+          leftToRightOrientation ? workspaceComponent : leftPanelComponent);
       // Set default divider location
       mainPane.setDividerLocation((int)((leftToRightOrientation ? 360 : 670) * SwingTools.getResolutionScale()));
       configureSplitPane(mainPane, home, MAIN_PANE_DIVIDER_LOCATION_VISUAL_PROPERTY,
@@ -3199,12 +3213,12 @@ public class HomePane extends JRootPane implements HomeView {
           public void propertyChange(PropertyChangeEvent ev) {
             if (mainPane.getComponentOrientation().isLeftToRight()) {
               mainPane.setRightComponent(null); // Needed to avoid twice the same child component
-              mainPane.setLeftComponent(catalogFurniturePane);
+              mainPane.setLeftComponent(leftPanelComponent);
               mainPane.setRightComponent(workspaceComponent);
             } else {
               mainPane.setRightComponent(null);
               mainPane.setLeftComponent(workspaceComponent);
-              mainPane.setRightComponent(catalogFurniturePane);
+              mainPane.setRightComponent(leftPanelComponent);
             }
             if (mainPane.isShowing()) {
               mainPane.setDividerLocation(mainPane.getWidth() - mainPane.getDividerLocation());
